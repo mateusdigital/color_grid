@@ -57,7 +57,7 @@ class Board
 
         this.state         = GAME_STATE_CONTINUE;
         this.movesCount    = 0;
-        this.maxMovesCount = 100;
+        this.maxMovesCount = this.blocksCount.x * this.blocksCount.y;
 
         this._initializeBlocks();
     } // ctor
@@ -75,8 +75,9 @@ class Board
         this._floodFill(colorIndex);
 
         ++this.movesCount;
-        if(this.movesCount >= this.maxMovesCount) {
+        if(this.movesCount > this.maxMovesCount) {
             this.state = GAME_STATE_DEFEAT;
+            this._setAllBlocksToBeOwnedAndDefeated();
         } else if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
             this.state = GAME_STATE_VICTORY;
         }
@@ -89,6 +90,9 @@ class Board
         for(let i = 0; i < this.ownedBlocks.length; ++i) {
             let block = this.ownedBlocks[i];
             block.update(dt);
+            if(this.state == GAME_STATE_VICTORY && !block.changingColor) {
+                this.changeColor(palette.getRandomIndex());
+            }
         }
     } // update
 
@@ -144,7 +148,6 @@ class Board
 
             curr_block.changeColor(desiredColor)
         }
-
     } // _floodFill
 
     //--------------------------------------------------------------------------
@@ -171,4 +174,18 @@ class Board
         this.ownedBlocks.push(this.blocks[0][0]); // left most is always owned.
         this.changeColor(this.blocks[0][0].targetColorIndex);
     } // _initializeBlocks()
+
+    //--------------------------------------------------------------------------
+    _setAllBlocksToBeOwnedAndDefeated()
+    {
+        this.ownedBlocks = [];
+        for(let y = 0; y < this.blocksCount.y; ++y) {
+            for(let x = 0; x < this.blocksCount.x; ++x) {
+                let block = this.blocks[y][x];
+                block.changeColor(palette.getDefeatIndex());
+
+                this.ownedBlocks.push(block);
+            }
+        }
+    } // _setAllBlocksToBeOwnedAndDefeated
 }; // class Board
