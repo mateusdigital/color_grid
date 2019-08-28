@@ -1,3 +1,7 @@
+//----------------------------------------------------------------------------//
+// Helper Functions                                                           //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 function GetSurroundCoords(v)
 {
     let coords = [];
@@ -16,6 +20,7 @@ function GetSurroundCoords(v)
     return coords;
 }
 
+//------------------------------------------------------------------------------
 function GetAdjacentCoords(v)
 {
     let coords = [];
@@ -26,8 +31,14 @@ function GetAdjacentCoords(v)
     return coords;
 }
 
+
+//----------------------------------------------------------------------------//
+// Board                                                                      //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 class Board
 {
+    //--------------------------------------------------------------------------
     constructor(x, y, w, h, r, c, colorsCount)
     {
         this.position    = Vector_Create (x, y);
@@ -46,7 +57,7 @@ class Board
         }
     } // ctor
 
-
+    //--------------------------------------------------------------------------
     changeColor(colorIndex)
     {
         let affected_coords = this._floodFill(this.ownedCoords, colorIndex);
@@ -60,6 +71,7 @@ class Board
         }
     } // changeColor
 
+    //--------------------------------------------------------------------------
     update(dt)
     {
         for(let i = 0; i < this.blockSize.y; ++i) {
@@ -69,6 +81,7 @@ class Board
         }
     } // update
 
+    //--------------------------------------------------------------------------
     draw()
     {
         Canvas_Push();
@@ -83,13 +96,14 @@ class Board
     } // draw
 
 
-
+    //--------------------------------------------------------------------------
     _isValidCoord(v)
     {
         return v.x >= 0 && v.x < this.blockSize.x
             && v.y >= 0 && v.y < this.blockSize.y;
     }
 
+    //--------------------------------------------------------------------------
     _floodFill(coords, desiredColor)
     {
         let affected_coords = [];
@@ -135,6 +149,7 @@ class Board
         return affected_coords;
     }
 
+    //--------------------------------------------------------------------------
     _initializeBlocks()
     {
         let block_width  = this.size.x / this.blockSize.x;
@@ -149,5 +164,4 @@ class Board
             }
         }
     } // _initializeBlocks()
-
 }; // class Board
