@@ -205,12 +205,6 @@ class Board
 
     _drawWithPreview()
     {
-        if(CAGUEI == true) {
-            CAGUEI = false;
-        } else {
-            debugger;
-        }
-
         for(let i = 0; i < this.previewOwnedIndexes.length; ++i) {
             let block = this._getBlockAtIndex(this.previewOwnedIndexes[i]);
             block.draw(0, 0.5);
