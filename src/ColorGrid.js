@@ -35,10 +35,14 @@ function Setup()
 
     // let color_count = 8;
     board         = new Board(-100, -100, 200, 200, 10, 10, color_count);
-
-
+    colorSelector = new ColorSelectorHud(
+        -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
+        Canvas_Width,      50,
+        color_count
+    );
 }
 let color_count = 2;
+
 //------------------------------------------------------------------------------
 function Draw(dt)
 {
@@ -46,13 +50,6 @@ function Draw(dt)
 
     board.update(dt);
     board.draw();
-
-
-    colorSelector = new ColorSelectorHud(
-        -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
-        Canvas_Width,      50,
-        color_count
-    );
 
     colorSelector.update(dt);
     colorSelector.draw();
@@ -76,8 +73,9 @@ function MouseUp()
 
 function MouseClick()
 {
-    mouseClick = true;
-    board.click();
+    if(colorSelector.hoveredColorIndex != PALETTE_INVALID_COLOR_INDEX) {
+        board.changeColor(colorSelector.hoveredColorIndex);
+    }
 }
 
 
