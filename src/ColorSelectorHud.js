@@ -11,7 +11,9 @@ class ColorSelectorHud
         this.colorBlocks    = [];
         this.colorBlockSize = null;
 
-        this.hoveredColorIndex = PALETTE_INVALID_COLOR_INDEX;
+        this.previousHoveredColorIndex = PALETTE_INVALID_COLOR_INDEX;
+        this.hoveredColorIndex         = PALETTE_INVALID_COLOR_INDEX;
+
         this._createColorBlocks();
     } // ctor
 
@@ -61,7 +63,6 @@ class ColorSelectorHud
     //--------------------------------------------------------------------------
     _updateHoverColorIndex()
     {
-        this.hoveredColorIndex = PALETTE_INVALID_COLOR_INDEX;
         let contains = Math_RectContainsPoint(
             this.position.x, this.position.y,
             this.size.x,     this.size.y,
@@ -69,6 +70,9 @@ class ColorSelectorHud
         );
 
         if(!contains) {
+            this.previousHoveredColorIndex = this.hoveredColorIndex;
+            this.hoveredColorIndex         = PALETTE_INVALID_COLOR_INDEX;
+
             return;
         }
 
@@ -82,9 +86,13 @@ class ColorSelectorHud
             );
 
             if(contains) {
-                this.hoveredColorIndex = i;
+                this.previousHoveredColorIndex = this.hoveredColorIndex;
+                this.hoveredColorIndex         = i;
                 return;
             }
         }
+
+        this.previousHoveredColorIndex = this.hoveredColorIndex;
+        this.hoveredColorIndex         = PALETTE_INVALID_COLOR_INDEX;
     } // _updateHoverColorIndex
 }; // class ColorSelectorHud
