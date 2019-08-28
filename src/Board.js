@@ -35,6 +35,11 @@ function GetAdjacentCoords(v)
 //----------------------------------------------------------------------------//
 // Board                                                                      //
 //----------------------------------------------------------------------------//
+const GAME_STATE_CONTINUE = 0;
+const GAME_STATE_VICTORY  = 1;
+const GAME_STATE_DEFEAT   = 2;
+
+
 //------------------------------------------------------------------------------
 class Board
 {
@@ -43,7 +48,7 @@ class Board
     {
         this.position    = Vector_Create (x, y);
         this.size        = Vector_Create (w, h);
-        this.blockSize   = Vector_Create (r, c);
+        this.blocksCount = Vector_Create (r, c);
         this.blocks      = Array_Create2D(r, c);
         this.colorsCount = colorsCount;
 
@@ -60,13 +65,21 @@ class Board
     //--------------------------------------------------------------------------
     changeColor(colorIndex)
     {
-        if(this.selectedColorIndex == colorIndex) {
+        if(this.selectedColorIndex == colorIndex ||
+           this.state != GAME_STATE_CONTINUE)
+        {
             return;
         }
 
         this.selectedColorIndex = colorIndex;
         this._floodFill(colorIndex);
 
+        ++this.movesCount;
+        if(this.movesCount >= this.maxMovesCount) {
+            this.state = GAME_STATE_DEFEAT;
+        } else if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
+            this.state = GAME_STATE_VICTORY;
+        }
     } // changeColor
 
 
@@ -84,8 +97,8 @@ class Board
     {
         Canvas_Push();
             Canvas_Translate(this.position.x, this.position.y);
-            for(let y = 0; y < this.blockSize.y; ++y) {
-                for(let x = 0; x < this.blockSize.x; ++x) {
+            for(let y = 0; y < this.blocksCount.y; ++y) {
+                for(let x = 0; x < this.blocksCount.x; ++x) {
                     this.blocks[y][x].draw();
                 }
             }
@@ -95,8 +108,8 @@ class Board
     //--------------------------------------------------------------------------
     _isValidCoord(v)
     {
-        return v.x >= 0 && v.x < this.blockSize.x
-            && v.y >= 0 && v.y < this.blockSize.y;
+        return v.x >= 0 && v.x < this.blocksCount.x
+            && v.y >= 0 && v.y < this.blocksCount.y;
     } //_isValidCoord
 
     //--------------------------------------------------------------------------
@@ -143,11 +156,11 @@ class Board
     //--------------------------------------------------------------------------
     _initializeBlocks()
     {
-        let block_width  = this.size.x / this.blockSize.x;
-        let block_height = this.size.y / this.blockSize.y;
+        let block_width  = this.size.x / this.blocksCount.x;
+        let block_height = this.size.y / this.blocksCount.y;
 
-        for(let i = 0; i < this.blockSize.y; ++i) {
-            for(let j = 0; j < this.blockSize.x; ++j) {
+        for(let i = 0; i < this.blocksCount.y; ++i) {
+            for(let j = 0; j < this.blocksCount.x; ++j) {
                 let color_index = Math_RandomInt(0, this.colorsCount);
                 let b = new Block(j, i, block_width, block_height, color_index);
 
