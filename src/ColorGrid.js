@@ -33,25 +33,33 @@ function Setup()
 {
     palette = new Palette();
 
-    // let color_count = 8;
-    board         = new Board(-100, -100, 200, 200, 10, 10, color_count);
+    let color_count = 4;
+    let width  = Canvas_Width - 20;
+    let height = width;
+    let rows = 20;
+    let cols = 20;
+    board         = new Board(-width/2, -height/2, width, height, rows, cols, color_count);
     colorSelector = new ColorSelectorHud(
         -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
         Canvas_Width,      50,
         color_count
     );
 }
-let color_count = 2;
+
 
 //------------------------------------------------------------------------------
 function Draw(dt)
 {
     Canvas_ClearWindow("#030303");
 
-    board.update(dt);
-    board.draw();
-
     colorSelector.update(dt);
+    board.update(dt);
+
+    if(colorSelector.hoveredColorIndex != colorSelector.previousHoveredColorIndex) {
+        board.previewFloodFill(colorSelector.hoveredColorIndex);
+    }
+
+    board.draw();
     colorSelector.draw();
 }
 
