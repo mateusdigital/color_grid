@@ -8,11 +8,12 @@ const PALETTE_INVALID_COLOR_INDEX = -1;
 class Palette
 {
     //--------------------------------------------------------------------------
-    constructor()
+    constructor(colorsCount)
     {
         this.colors = [];
-        for(let i = 0; i < 10; ++i) {
-            let c = chroma.hsl(360 / 10 * i, 1, 0.5);
+        this.colorsCount = colorsCount;
+        for(let i = 0; i < colorsCount; ++i) {
+            let c = chroma.hsl(360 / colorsCount * i, 1, 0.5);
             this.colors.push(c);
         }
     } // ctor
