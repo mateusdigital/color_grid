@@ -36,8 +36,8 @@ function Setup()
     let color_count = 4;
     let width  = Canvas_Width - 20;
     let height = width;
-    let rows = 20;
-    let cols = 20;
+    let rows = 5;
+    let cols = 5;
 
     palette       = new Palette(color_count);
     board         = new Board(-width/2, -height/2, width, height, rows, cols, color_count);
@@ -57,7 +57,12 @@ function Draw(dt)
     colorSelector.update(dt);
     board.update(dt);
 
-    if(colorSelector.hoveredColorIndex != colorSelector.previousHoveredColorIndex) {
+
+    let needs_new_preview =
+        (colorSelector.hoveredColorIndex != PALETTE_INVALID_COLOR_INDEX) &&
+        (colorSelector.hoveredColorIndex != colorSelector.previousHoveredColorIndex);
+
+    if(needs_new_preview) {
         board.previewFloodFill(colorSelector.hoveredColorIndex);
     }
 

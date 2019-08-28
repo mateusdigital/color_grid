@@ -42,7 +42,7 @@ class Block
     } // update
 
     //--------------------------------------------------------------------------
-    draw(colorModifier, ratio)
+    draw(colorPreviewRatio)
     {
         let w = this.size.x;
         let h = this.size.y;
@@ -63,6 +63,13 @@ class Block
                     dstColor,
                     this.timeToChangeColor / this.maxTimeToChangeColor
                 );
+            }
+            if(colorPreviewRatio != 1) {
+                // color = color.set("hsl.l", colorPreviewRatio);
+                // w *= colorPreviewRatio;
+                // h *= colorPreviewRatio;
+                let s = Math_Map(colorPreviewRatio, 0, 1, 0.5, 1);
+                Canvas_Scale(colorPreviewRatio);
             }
 
             Canvas_SetFillStyle(color);

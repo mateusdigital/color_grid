@@ -52,8 +52,12 @@ class Board
         this.previewOwnedIndexes = [];
         this.previewNonOwnedIndexes = [];
 
-        this.colorModifierTime    = 1;
-        this.maxColorModifierTime = 1;
+        this.selectedColorIndex = PALETTE_INVALID_COLOR_INDEX;
+
+        this.previewTime      = 0;
+        this.maxPreviewTime   = 0.3;
+        this.previewTimeRatio = 0;
+        this.isPreviewing     = false;
 
         this._initializeBlocks();
     } // ctor
@@ -63,8 +67,6 @@ class Board
     // Preview Flood Fill
     previewFloodFill(colorIndex)
     {
-        this.resetPreviewFloodFill();
-
         // Trying to flood fill that same stuff as before...
         if(colorIndex == PALETTE_INVALID_COLOR_INDEX ||
            colorIndex == this.selectedColorIndex)
@@ -72,9 +74,16 @@ class Board
             return;
         }
 
+        this.resetPreviewFloodFill();
+
         // Make the preview owned indexes with all indexes
         // that might be affected if player chooses this color.
         this.previewOwnedIndexes = this._floodFill(this.ownedIndexes, colorIndex)
+        for(let i = 0; i < this.previewOwnedIndexes.length; ++i) {
+            let block_index = this.previewOwnedIndexes[i];
+            let block       = this._getBlockAtIndex(block_index);
+        }
+
 
         // Make the preview non owned indexes with all indexes
         // in board that are not affected if player choses this color.
@@ -88,14 +97,16 @@ class Board
                 this.previewNonOwnedIndexes.push(non_owned_index);
             }
         }
-
-        this.colorModifierTime = 0;
     } // previewFloodFill
 
     //--------------------------------------------------------------------------
     resetPreviewFloodFill()
     {
-        this.colorModifierTime      = this.maxColorModifierTime;
+        if(!this.isPreviewing) {
+            this.previewTime  = 0;
+        }
+        this.isPreviewing = true;
+
         this.previewOwnedIndexes    = [];
         this.previewNonOwnedIndexes = [];
     } // resetPreviewFoodFill
@@ -122,7 +133,9 @@ class Board
         // Update the indexes...
         this.ownedIndexes    = this.previewOwnedIndexes;
         this.nonOwnedIndexes = this.previewNonOwnedIndexes;
+        // debugger;
         this.resetPreviewFloodFill();
+
 
         // Update the select color.
         this.selectedColorIndex = colorIndex;
@@ -157,6 +170,23 @@ class Board
     //--------------------------------------------------------------------------
     update(dt)
     {
+        if(this.isPreviewing) {
+            this.previewTime += dt;
+            if(this.previewTime >= this.maxPreviewTime) {
+                this.previewTime  = this.maxPreviewTime;
+                this.isPreviewing = false;
+            }
+
+            let r = (this.previewTime / this.maxPreviewTime);
+            let a = Math_Map(r, -1, 1, -MATH_PI, MATH_PI);
+            let v = Math_Sin(a);
+            let vv = Math_Map(v, 0, +1, 1, 0.8);
+
+            // Log(r, v);
+            this.previewTimeRatio = vv;
+        }
+
+
         for(let i = 0; i < this.ownedIndexes.length; ++i) {
             let block_index = this.ownedIndexes[i];
             let block       = this._getBlockAtIndex(block_index);
@@ -195,13 +225,13 @@ class Board
         for(let i = 0; i < this.ownedIndexes.length; ++i) {
             let block_index = this.ownedIndexes[i];
             let block       = this._getBlockAtIndex(block_index);
-            block.draw(0, 1);
+            block.draw(this.previewTimeRatio);
         }
 
         for(let i = 0; i < this.nonOwnedIndexes.length; ++i) {
             let block_index = this.nonOwnedIndexes[i];
             let block       = this._getBlockAtIndex(block_index);
-            block.draw(0, 1);
+            block.draw(1);
         }
     }
 
@@ -209,13 +239,13 @@ class Board
     {
         for(let i = 0; i < this.previewOwnedIndexes.length; ++i) {
             let block = this._getBlockAtIndex(this.previewOwnedIndexes[i]);
-            block.draw(0, 0.5);
+            block.draw(this.previewTimeRatio);
         }
 
         for(let i = 0; i < this.previewNonOwnedIndexes.length; ++i) {
             let block_index = this.previewNonOwnedIndexes[i];
             let block       = this._getBlockAtIndex(block_index);
-            block.draw(0, 1);
+            block.draw(1);
         }
     }
 
