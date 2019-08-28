@@ -14,6 +14,8 @@ class Block
         this.maxTimeToChangeColor = 2;
 
         this.done = false;
+
+        this.owned = false;
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -32,18 +34,29 @@ class Block
     } // update
 
     //--------------------------------------------------------------------------
-    draw()
+    draw(colorModifier, ratio)
     {
         let w = this.size.x;
         let h = this.size.y;
-        let x = this.position.x * w;
-        let y = this.position.y * h;
 
+        // if(this.owned) {
+        //     let s = Math_Map(Math_Sin(Time_Total), -1, 1, 0.8, 1.0);
+        //     w = this.size.x * s;
+        //     h = this.size.y * s;
+        // }
         Canvas_Push();
-            Canvas_Translate(x, y);
+            Canvas_Translate(
+                (this.position.x * this.size.x) + this.size.x / 2,
+                (this.position.y * this.size.y) + this.size.y / 2
+            );
 
-            Canvas_SetFillStyle(palette.getColor(this.color));
-            Canvas_FillRect(0, 0, w-1, h-1);
+            let color = palette.getColor(this.color);
+            // if(colorModifier != PALETTE_INVALID_COLOR_INDEX){
+                // color = palette.getColor(colorModifier);
+                color = color.set('hsl.l', Math_Map(ratio, 0, 1, 1, 0.5));
+            // }
+            Canvas_SetFillStyle(color);
+            Canvas_FillRect(-w/2, -h/2, w-1, h-1);
         Canvas_Pop();
     } // draw
 }; // class Block
