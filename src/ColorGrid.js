@@ -33,7 +33,7 @@ function Setup()
 {
 
 
-    let color_count = 4;
+    let color_count = 5;
     let width  = Canvas_Width - 20;
     let height = width;
     let rows = 5;

@@ -38,7 +38,7 @@ class Block
         if(this.timeToChangeColor >= this.maxTimeToChangeColor) {
             this.timeToChangeColor = this.maxTimeToChangeColor;
             this.colorIndex        = this.targetColorIndex;
-            this.changingColor     = false;
+            this.changingColor      = false;
         }
     } // update
 
