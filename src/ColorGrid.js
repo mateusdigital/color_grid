@@ -31,13 +31,15 @@ let colorSelector;
 //------------------------------------------------------------------------------
 function Setup()
 {
-    palette = new Palette();
+
 
     let color_count = 4;
     let width  = Canvas_Width - 20;
     let height = width;
     let rows = 20;
     let cols = 20;
+
+    palette       = new Palette(color_count);
     board         = new Board(-width/2, -height/2, width, height, rows, cols, color_count);
     colorSelector = new ColorSelectorHud(
         -Canvas_Width / 2, Canvas_Edge_Bottom - 50,

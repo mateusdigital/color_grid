@@ -104,6 +104,10 @@ class Board
     // Color Change
     changeColor(colorIndex)
     {
+        if(this.selectedColorIndex == colorIndex) {
+            return;
+        }
+
         // We have 2 options here...
         //   1 - We have a previous flood fill data, so just
         //       make the owned / now-owned indexes to refer to that.
@@ -126,11 +130,9 @@ class Board
         // Update the color blocks.
         for(let i = 0; i < this.ownedIndexes.length; ++i) {
             let block_index = this.ownedIndexes[i];
-            let c = this._indexToCoord(block_index);
+            let block       = this._getBlockAtIndex(block_index);
 
-            this.blocks[c.y][c.x].color       = colorIndex;
-            this.blocks[c.y][c.x].targetColor = colorIndex;
-            this.blocks[c.y][c.x].owned       = true;
+            block.changeColor(colorIndex);
         }
     } // changeColor
 
@@ -155,12 +157,12 @@ class Board
     //--------------------------------------------------------------------------
     update(dt)
     {
-        // if(this.possibleAffectedCoords.length != 0) {
-        //     this.colorModifierTime += dt;
-        //     if(this.colorModifierTime >= this.maxColorModifierTime) {
-        //         this.colorModifierTime = this.maxColorModifierTime;
-        //     }
-        // }
+        for(let i = 0; i < this.ownedIndexes.length; ++i) {
+            let block_index = this.ownedIndexes[i];
+            let block       = this._getBlockAtIndex(block_index);
+
+            block.update(dt);
+        }
 
         // for(let i = 0; i < this.blockSize.y; ++i) {
         //     for(let j = 0; j < this.blockSize.x; ++j) {
@@ -260,7 +262,7 @@ class Board
 
                 // Not same color
                 let block = this._getBlockAtCoord(test_coord);
-                if(block.targetColor != desiredColor) {
+                if(block.targetColorIndex != desiredColor) {
                     // Log("Not same color...");
                     continue;
                 }
@@ -319,6 +321,6 @@ class Board
         }
 
         this.ownedIndexes.push(0); // left most is always owned.
-        this.changeColor(this._getBlockAtIndex(0).targetColor);
+        this.changeColor(this._getBlockAtIndex(0).targetColorIndex);
     } // _initializeBlocks()
 }; // class Board
