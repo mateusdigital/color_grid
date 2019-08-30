@@ -22,6 +22,19 @@
 //---------------------------------------------------------------------------~//
 
 //------------------------------------------------------------------------------
+function Img2Context(img)
+{
+    let c = document.createElement("canvas").getContext("2d");
+    c.width         = img.width;
+    c.height        = img.height;
+    c.canvas.width  = img.width;
+    c.canvas.height = img.height;
+
+    c.drawImage(img, 0, 0);
+    return c;
+}
+
+//------------------------------------------------------------------------------
 async function LoadTextures()
 {
     let texturesPaths = arguments;
@@ -30,18 +43,25 @@ async function LoadTextures()
         let loaded_textures = [];
 
         let callback = function() {
+            let path = this.name;
+            loaded_textures[path] = Img2Context(this);
+
             if(--load_count <= 0) {
                 resolve(loaded_textures);
             }
         };
 
         for(let i = 0; i < load_count; ++i) {
+            let path = texturesPaths[i];
+
             let img = new Image();
-            loaded_textures.push(img);
+            loaded_textures[path] = img;
 
             img.onload = callback;
-            img.src    = texturesPaths[i];
+            img.src    = path;
+            img.name   = path;
         }
     });
     return promise;
 }
+

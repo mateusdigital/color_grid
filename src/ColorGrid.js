@@ -30,7 +30,6 @@ let textureReset = null;
 let loaded       = false;
 
 
-
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
@@ -41,8 +40,8 @@ async function Setup()
         "./res/icon_cog.png",
         "./res/icon_reset.png"
     );
-    textureCog   = loaded_textures[0];
-    textureReset = loaded_textures[1];
+    textureCog   = loaded_textures["./res/icon_cog.png"];
+    textureReset = loaded_textures["./res/icon_reset.png"];
     loaded = true;
 
     let color_count = 5;
