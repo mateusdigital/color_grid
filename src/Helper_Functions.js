@@ -83,8 +83,12 @@ function TintImage(image, color)
     }
 
     Canvas_SetRenderTarget(TEMP_CANVAS);
+        CurrContext.globalCompositeOperation = "source-over";
+        CurrContext.fillRect(0, 0, image.width, image.height);
+
         Canvas_SetFillStyle(color);
         CurrContext.fillRect(0, 0, image.width, image.height);
+
 
         CurrContext.globalCompositeOperation = "destination-atop";
         CurrContext.drawImage(image.canvas, 0, 0);
