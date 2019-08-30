@@ -47,8 +47,6 @@ class ColorSelectorHud
         Canvas_Push();
             // @todo(stdmatt): Debug draw...
             Canvas_Translate(this.position.x, this.position.y);
-            Canvas_SetFillStyle("magenta");
-            Canvas_FillRect(0, 0, this.size.x, this.size.y);
 
             for(let i = 0; i < this.colorsCount; ++i) {
                 Canvas_SetFillStyle(palette.getColor(i));
