@@ -65,3 +65,39 @@ async function LoadTextures()
     return promise;
 }
 
+
+//------------------------------------------------------------------------------
+let TEMP_CANVAS = null;
+function TintImage(image, color)
+{
+    if(TEMP_CANVAS == null) {
+        TEMP_CANVAS = document.createElement("canvas").getContext("2d");
+    }
+    if(TEMP_CANVAS.width < image.width) {
+        TEMP_CANVAS.width         = image.width;
+        TEMP_CANVAS.canvas.width  = image.width;
+    }
+    if(TEMP_CANVAS.height < image.height) {
+        TEMP_CANVAS.height        = image.height;
+        TEMP_CANVAS.canvas.height = image.height;
+    }
+
+    Canvas_SetRenderTarget(TEMP_CANVAS);
+        Canvas_SetFillStyle(color);
+        CurrContext.fillRect(0, 0, image.width, image.height);
+
+        CurrContext.globalCompositeOperation = "destination-atop";
+        CurrContext.drawImage(image.canvas, 0, 0);
+    Canvas_SetRenderTarget(null);
+}
+
+//------------------------------------------------------------------------------
+function DrawWithTint(img, dx, dy, dw, dh, tint)
+{
+    TintImage(img, tint);
+    CurrContext.drawImage(
+        TEMP_CANVAS.canvas,
+        0, 0, img.width, img.height,
+        dx, dy, dw, dh
+    );
+}

@@ -27,11 +27,11 @@ class StatusHud
 
             let cog_x = gap;
             let cog_y = gap;
-            CurrContext.drawImage(textureCog, cog_x, cog_y, icon_width, icon_height);
+            DrawWithTint(textureCog, cog_x, cog_y, icon_width, icon_height, "white");
 
             let reload_x = this.size.x - icon_width - gap;;
             let reload_y = gap;
-            CurrContext.drawImage(textureReset, reload_x, reload_y, icon_width, icon_height);
+            // CurrContext.drawImage(textureReset, reload_x, reload_y, icon_width, icon_height);
         Canvas_Pop();
     } // draw
 
