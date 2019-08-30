@@ -7,7 +7,7 @@
 //                                                                            //
 //  File      : ColorGrid.js                                                  //
 //  Project   : color_grid                                                    //
-//  Date      : Aug 15, 2019                                                  //
+//  Date      : Aug 27, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
 //  Copyright : stdmatt - 2019                                                //
@@ -23,15 +23,27 @@
 let palette;
 let board;
 let colorSelector;
+let statusHud;
+
+let textureCog   = null;
+let textureReset = null;
+let loaded       = false;
+
 
 
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-function Setup()
+async function Setup()
 {
-
+    let loaded_textures = await LoadTextures(
+        "./res/icon_cog.png",
+        "./res/icon_reset.png"
+    );
+    textureCog   = loaded_textures[0];
+    textureReset = loaded_textures[1];
+    loaded = true;
 
     let color_count = 5;
     let width  = Canvas_Width - 20;
@@ -39,8 +51,19 @@ function Setup()
     let rows = 5;
     let cols = 5;
 
-    palette       = new Palette(color_count);
-    board         = new Board(-width/2, -height/2, width, height, rows, cols, color_count);
+    palette = new Palette(color_count);
+
+    board = new Board(
+        -width/2,  -height/2,
+         width,     height,
+         rows,      cols,
+         color_count
+    );
+
+    statusHud = new StatusHud(
+        -Canvas_Width / 2, Canvas_Edge_Top,
+        Canvas_Width,      50,
+    );
     colorSelector = new ColorSelectorHud(
         -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
         Canvas_Width,      50,
@@ -53,12 +76,17 @@ function Setup()
 function Draw(dt)
 {
     Canvas_ClearWindow("#030303");
+    if(!loaded) {
+        return;
+    }
 
     colorSelector.update(dt);
-    board.update(dt);
+    statusHud    .update(dt);
+    board        .update(dt);
 
-    board.draw();
     colorSelector.draw();
+    statusHud    .draw();
+    board        .draw();
 }
 
 
