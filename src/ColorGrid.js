@@ -20,10 +20,11 @@
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
-let palette;
-let board;
-let colorSelector;
-let statusHud;
+let gameOptions   = null;
+let palette       = null;
+let board         = null;
+let colorSelector = null;
+let statusHud     = null;
 
 let textureCog   = null;
 let textureReset = null;
@@ -31,11 +32,37 @@ let loaded       = false;
 
 
 //----------------------------------------------------------------------------//
+// Helper Functions                                                           //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+function ResetGame()
+{
+    palette = new Palette(gameOptions.colorsCount);
+
+    board = new Board(
+        -gameOptions.gridWidth/2,  -gameOptions.gridHeight/2,
+         gameOptions.gridWidth,     gameOptions.gridHeight,
+         gameOptions.gridRows,      gameOptions.gridCols,
+         gameOptions.colorsCount
+    );
+
+    colorSelector = new ColorSelectorHud(
+        -Canvas_Width / 2,  Canvas_Edge_Bottom - 50,
+         Canvas_Width,      50,
+         gameOptions.colorsCount
+    );
+}
+
+//------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 async function Setup()
 {
+    //
+    // Load the textures - Game can't run without it...
     let loaded_textures = await LoadTextures(
         "./res/icon_cog.png",
         "./res/icon_reset.png"
@@ -44,32 +71,18 @@ async function Setup()
     textureReset = loaded_textures["./res/icon_reset.png"];
     loaded = true;
 
-    let color_count = 5;
-    let width  = Canvas_Width - 20;
-    let height = width;
-    let rows = 5;
-    let cols = 5;
-
-    palette = new Palette(color_count);
-
-    board = new Board(
-        -width/2,  -height/2,
-         width,     height,
-         rows,      cols,
-         color_count
-    );
-
-    statusHud = new StatusHud(
+    //
+    // Create the objects that are need to be created only once.
+    gameOptions = new GameOptions();
+    statusHud   = new StatusHud(
         -Canvas_Width / 2, Canvas_Edge_Top,
-        Canvas_Width,      50,
+         Canvas_Width,      50,
     );
-    colorSelector = new ColorSelectorHud(
-        -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
-        Canvas_Width,      50,
-        color_count
-    );
-}
 
+    //
+    // Create the objects that depends on options...
+    ResetGame();
+}
 
 //------------------------------------------------------------------------------
 function Draw(dt)
@@ -109,6 +122,7 @@ function MouseClick()
     if(colorSelector.hoveredColorIndex != PALETTE_INVALID_COLOR_INDEX) {
         board.changeColor(colorSelector.hoveredColorIndex);
     }
+    Log("Mouse Click");
 }
 
 
