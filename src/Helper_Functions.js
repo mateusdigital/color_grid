@@ -65,13 +65,24 @@ async function LoadTextures()
     return promise;
 }
 
+//------------------------------------------------------------------------------
+function CreateContext(width, height)
+{
+    let c = document.createElement("canvas").getContext("2d");
+    c.width         = width;
+    c.canvas.width  = width;
+    c.height        = height;
+    c.canvas.height = height;
+    return c;
+}
+
 
 //------------------------------------------------------------------------------
 let TEMP_CANVAS = null;
 function TintImage(image, color)
 {
     if(TEMP_CANVAS == null) {
-        TEMP_CANVAS = document.createElement("canvas").getContext("2d");
+        TEMP_CANVAS = CreateContext(image.width, image.height);
     }
     if(TEMP_CANVAS.width < image.width) {
         TEMP_CANVAS.width         = image.width;
@@ -88,7 +99,6 @@ function TintImage(image, color)
 
         Canvas_SetFillStyle(color);
         CurrContext.fillRect(0, 0, image.width, image.height);
-
 
         CurrContext.globalCompositeOperation = "destination-atop";
         CurrContext.drawImage(image.canvas, 0, 0);
