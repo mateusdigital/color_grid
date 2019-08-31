@@ -16,6 +16,22 @@
 //   Represents a color block in the color grid field.                        //
 //---------------------------------------------------------------------------~//
 
+//----------------------------------------------------------------------------//
+// Block                                                                      //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+const BLOCK_END_ANIM_FORCE_MIN_X = -3;
+const BLOCK_END_ANIM_FORCE_MAX_X = +3;
+
+const BLOCK_END_ANIM_FORCE_MIN_Y = -90;
+const BLOCK_END_ANIM_FORCE_MAX_Y = -60;
+
+const BLOCK_END_ANIM_ANGLE_MIN = -MATH_PI;
+const BLOCK_END_ANIM_ANGLE_MAX = +MATH_PI;
+
+const BLOCK_END_ANIM_START_DELAY_MIN = 0.5;
+const BLOCK_END_ANIM_START_DELAY_MAX = 1.5;
+
 
 //------------------------------------------------------------------------------
 class Block
@@ -23,47 +39,43 @@ class Block
     //--------------------------------------------------------------------------
     constructor(x, y, w, h, colorIndex)
     {
+        // Transform
         this.position = Vector_Create(x, y);
         this.size     = Vector_Create(w, h);
+        this.rotation = 0;
 
+        // Color
         this.colorIndex       = palette.getDefeatIndex();
         this.targetColorIndex = colorIndex;
 
         this.timeToChangeColor    = 0;
         this.maxTimeToChangeColor = Math_Random(0, 1);
         this.changingColor        = false;
+        this.isEntryColorChange   = true;
 
-        this.isEntryColorChange = true;
         this.changeColor(this.targetColorIndex);
 
-        this.isOwned   = false;
-        this.isVictory = false;
+        this.isOwned = false;
 
-        this.force = null;
-
-        this.rotation       = 0;
-        this.targetRotation = 0;
+        // End Game Animation.
+        this.isPlayingEndAnimation      = false;
+        this.endAnimationDelayToStart   = this._calcEndAnimStartDelay  ();
+        this.endAnimationForce          = this._randomEndAnimationForce();
+        this.endAnimationTargetRotation = this._calcEndRotationAngle   ();
+        this.endAnimationVelocity       = Vector_Create(0, 0);
     } // ctor
 
     setVictory()
     {
-        setTimeout(()=>{
-            this.isVictory = true;
-            let MX = 3;
-            let x = Math_RandomInt(-MX, MX);
-            let y = -90 //Math_RandomInt(-60, -60);
-
-            this.force = Vector_Create(x, y);
-            this.acc   = 30;
-            this.rotation = Math_Map(x, -MX, +MX, -MATH_PI, MATH_PI);
-            this.v = Vector_Create(0, 0);
-        }, Math_RandomInt(200, 1200));
+        this.isPlayingEndAnimation = true;
     }
 
     //--------------------------------------------------------------------------
     changeColor(colorIndex)
     {
-        if(this.targetColorIndex == colorIndex && !this.isEntryColorChange) {
+        if(this.targetColorIndex == colorIndex &&
+           !this.isEntryColorChange)
+        {
             return;
         }
 
@@ -89,18 +101,19 @@ class Block
             }
         }
 
-        if(this.isVictory) {
-            // this.force.x *= 0.9;
-            this.force.y *= 0.9;
+        if(this.isPlayingEndAnimation) {
+            this.endAnimationDelayToStart -= dt;
+            if(this.endAnimationDelayToStart <= 0) {
+                this.endAnimationForce.y *= 0.9; // decay...
+                let acc = 30 + this.endAnimationForce.y;
 
-            let acc = this.acc + this.force.y;
-            this.v.x = this.force.x;
-            this.v.y += acc * dt;
+                this.endAnimationVelocity.x = this.endAnimationForce.x;
+                this.endAnimationVelocity.y += acc * dt;
 
-            this.position.x += this.v.x * dt;
-            this.position.y += this.v.y * dt;
+                this.position.x += this.endAnimationVelocity.x * dt;
+                this.position.y += this.endAnimationVelocity.y * dt;
+            }
         }
-
     } // update
 
     //--------------------------------------------------------------------------
@@ -134,4 +147,42 @@ class Block
             Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/6);
         Canvas_Pop();
     } // draw
+
+
+    //--------------------------------------------------------------------------
+    _calcEndAnimStartDelay()
+    {
+        return Math_Random(
+            BLOCK_END_ANIM_START_DELAY_MIN,
+            BLOCK_END_ANIM_START_DELAY_MAX
+        );
+    } // _calcEndAnimStartDelay
+
+    //--------------------------------------------------------------------------
+    _calcEndRotationAngle()
+    {
+        return Math_Map(
+            this.endAnimationForce.x,
+            BLOCK_END_ANIM_FORCE_MIN_X,
+            BLOCK_END_ANIM_FORCE_MAX_X,
+            BLOCK_END_ANIM_ANGLE_MIN,
+            BLOCK_END_ANIM_ANGLE_MAX
+        );
+    } // _calcEndRotationAngle
+
+    //--------------------------------------------------------------------------
+    _randomEndAnimationForce()
+    {
+        let x = Math_RandomInt(
+            BLOCK_END_ANIM_FORCE_MIN_X,
+            BLOCK_END_ANIM_FORCE_MAX_X
+        );
+        let y = Math_RandomInt(
+            BLOCK_END_ANIM_FORCE_MIN_Y,
+            BLOCK_END_ANIM_FORCE_MAX_Y
+        );
+
+        return Vector_Create(x, y);
+    } // _randomEndAnimationForce
+
 }; // class Block
