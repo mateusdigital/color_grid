@@ -109,17 +109,26 @@ class Board
     update(dt)
     {
         this.canChangeColors = true;
-        for(let i = 0; i < this.ownedBlocks.length; ++i) {
-            let block = this.ownedBlocks[i];
-            block.update(dt);
-            if(block.changingColor) {
-                this.canChangeColors = false;
-            }
-
-            if(this.state == GAME_STATE_VICTORY && !block.changingColor) {
-                this.changeColor(palette.getRandomIndex());
+        for(let y = 0; y < this.blocksCount.y; ++y) {
+            for(let x = 0; x < this.blocksCount.x; ++x) {
+                let block = this.blocks[y][x];
+                block.update(dt);
+                if(block.changingColor) {
+                    this.canChangeColors = false;
+                }
             }
         }
+        // for(let i = 0; i < this.ownedBlocks.length; ++i) {
+        //     let block = this.ownedBlocks[i];
+        //     block.update(dt);
+        //     if(block.changingColor) {
+        //         this.canChangeColors = false;
+        //     }
+
+        //     if(this.state == GAME_STATE_VICTORY && !block.changingColor) {
+        //         this.changeColor(palette.getRandomIndex());
+        //     }
+        // }
     } // update
 
     //--------------------------------------------------------------------------
