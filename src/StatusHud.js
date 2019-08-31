@@ -1,10 +1,14 @@
 class UIButton
 {
-    constructor(texture, srcColor, hoverColor, position, size, callback)
+    constructor(texture,
+        srcColor, hoverColor, clickColor,
+        position, size,
+        callback)
     {
         this.texture    = texture;
         this.srcColor   = srcColor;
         this.hoverColor = hoverColor;
+        this.clickColor = clickColor;
         this.currColor  = srcColor;
 
         this.position = Vector_Copy(position);
@@ -35,7 +39,12 @@ class UIButton
             // transform matrix on update method.
             this._updateMouseStatus();
             if(this.isMouseInside) {
-                this.currColor = this.hoverColor;
+                if(Mouse_IsDown) {
+                    this.currColor = this.clickColor;
+                } else {
+                    this.currColor = this.hoverColor;
+                }
+
             } else {
                 this.currColor = this.srcColor;
             }
@@ -77,7 +86,9 @@ class StatusHud
         let cog_size     = Vector_Create(icon_width, icon_height);
         this.cogButton = new UIButton(
             textureCog,
-            "white", "red",
+            chroma("white"),
+            chroma("white").darken(2),
+            chroma("white").darken(3),
             cog_position,
             cog_size,
             this.onCogClicked
@@ -88,7 +99,9 @@ class StatusHud
         let reload_size     = Vector_Create(icon_width, icon_height);
         this.reloadButton = new UIButton(
             textureReset,
-            "white", "red",
+            chroma("white"),
+            chroma("white").darken(2),
+            chroma("white").darken(3),
             reload_position,
             reload_size,
             this.onReloadClicked
