@@ -23,8 +23,8 @@
 const BLOCK_END_ANIM_FORCE_MIN_X = -3;
 const BLOCK_END_ANIM_FORCE_MAX_X = +3;
 
-const BLOCK_END_ANIM_FORCE_MIN_Y = -90;
-const BLOCK_END_ANIM_FORCE_MAX_Y = -60;
+const BLOCK_END_ANIM_FORCE_MIN_Y = -120;
+const BLOCK_END_ANIM_FORCE_MAX_Y = -90;
 
 const BLOCK_END_ANIM_ANGLE_MIN = -MATH_PI;
 const BLOCK_END_ANIM_ANGLE_MAX = +MATH_PI;
@@ -58,11 +58,13 @@ class Block
         this.isOwned = false;
 
         // End Game Animation.
-        this.isPlayingEndAnimation      = false;
-        this.endAnimationDelayToStart   = this._calcEndAnimStartDelay  ();
-        this.endAnimationForce          = this._randomEndAnimationForce();
-        this.endAnimationTargetRotation = this._calcEndRotationAngle   ();
-        this.endAnimationVelocity       = Vector_Create(0, 0);
+        this.isPlayingEndAnimation    = false;
+        this.endAnimationDelayToStart = this._calcEndAnimStartDelay  ();
+        this.endAnimationForce        = this._randomEndAnimationForce();
+        this.endAnimationAngle        = this._calcEndRotationAngle   ();
+        this.endAnimationVelocity     = Vector_Create(0, 0);
+        this.endAnimationTime         = 0;
+        this.endAnimationMaxTime      = 1;
     } // ctor
 
     setVictory()
@@ -104,6 +106,12 @@ class Block
         if(this.isPlayingEndAnimation) {
             this.endAnimationDelayToStart -= dt;
             if(this.endAnimationDelayToStart <= 0) {
+                this.endAnimationTime += dt;
+                if(this.endAnimationTime >= this.endAnimationMaxTime) {
+                    this.endAnimationTime = this.endAnimationMaxTime;
+                    // done..
+                }
+
                 this.endAnimationForce.y *= 0.9; // decay...
                 let acc = 30 + this.endAnimationForce.y;
 
@@ -112,6 +120,8 @@ class Block
 
                 this.position.x += this.endAnimationVelocity.x * dt;
                 this.position.y += this.endAnimationVelocity.y * dt;
+
+                this.rotation += this.endAnimationAngle * dt;
             }
         }
     } // update
@@ -129,6 +139,8 @@ class Block
             );
 
             let color = palette.getColor(this.targetColorIndex);
+            //
+            // Changing color
             if(this.changingColor) {
                 let srcColor = palette.getColor(this.colorIndex);
                 let dstColor = color;
@@ -138,6 +150,12 @@ class Block
                     dstColor,
                     this.timeToChangeColor / this.maxTimeToChangeColor
                 );
+            }
+
+            //
+            // Ending Animation
+            if(this.isPlayingEndAnimation) {
+                s = Math_Map(this.endAnimationTime, 0, this.endAnimationMaxTime, 1, 0.5);
             }
 
             Canvas_Scale(s);
