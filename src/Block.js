@@ -35,6 +35,8 @@ class Block
 
         this.isEntryColorChange = true;
         this.changeColor(this.targetColorIndex);
+
+        this.isOwned = false;
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -52,25 +54,23 @@ class Block
     //--------------------------------------------------------------------------
     update(dt)
     {
-        if(!this.changingColor) {
-            return;
-        }
+        if(this.changingColor) {
+            this.timeToChangeColor += dt
+            if(this.timeToChangeColor >= this.maxTimeToChangeColor) {
+                this.timeToChangeColor = this.maxTimeToChangeColor;
+                this.colorIndex        = this.targetColorIndex;
+                this.changingColor      = false;
 
-        this.timeToChangeColor += dt
-        if(this.timeToChangeColor >= this.maxTimeToChangeColor) {
-            this.timeToChangeColor = this.maxTimeToChangeColor;
-            this.colorIndex        = this.targetColorIndex;
-            this.changingColor      = false;
-
-            if(this.isEntryColorChange) {
-                this.isEntryColorChange = false;
-                this.maxTimeToChangeColor = 0.5;
+                if(this.isEntryColorChange) {
+                    this.isEntryColorChange = false;
+                    this.maxTimeToChangeColor = 0.5;
+                }
             }
         }
     } // update
 
     //--------------------------------------------------------------------------
-    draw(colorPreviewRatio)
+    draw(s)
     {
         let w = this.size.x;
         let h = this.size.y;
@@ -92,6 +92,8 @@ class Block
                     this.timeToChangeColor / this.maxTimeToChangeColor
                 );
             }
+
+            Canvas_Scale(s);
 
             Canvas_SetFillStyle(color);
             Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/6);
