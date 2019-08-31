@@ -5,7 +5,7 @@
 //                   \__ \ || (_| | | | | | | (_| | |_| |_                    //
 //                   |___/\__\__,_|_| |_| |_|\__,_|\__|\__|                   //
 //                                                                            //
-//  File      : StatusHud.js                                                  //
+//  File      : UIButton.js                                                   //
 //  Project   : color_grid                                                    //
 //  Date      : Aug 28, 2019                                                  //
 //  License   : GPLv3                                                         //
@@ -13,81 +13,80 @@
 //  Copyright : stdmatt - 2019                                                //
 //                                                                            //
 //  Description :                                                             //
-//   Implements the top hud of the game.                                      //
+//   Implements a user interface button that can be                           //
+//   interacted with the mouse.                                               //
 //---------------------------------------------------------------------------~//
 
-
 //------------------------------------------------------------------------------
-class StatusHud
+class UIButton
 {
     //--------------------------------------------------------------------------
-    constructor(x, y, w, h)
+    constructor(texture,
+        srcColor, hoverColor, clickColor,
+        position, size,
+        callback)
     {
-        this.position = Vector_Create(x, y);
-        this.size     = Vector_Create(w, h);
+        this.texture    = texture;
+        this.srcColor   = srcColor;
+        this.hoverColor = hoverColor;
+        this.clickColor = clickColor;
+        this.currColor  = srcColor;
 
-        let gap         = 10;
-        let icon_width  = (this.size.y - gap * 2);
-        let icon_height = (this.size.y - gap * 2);
+        this.position = Vector_Copy(position);
+        this.size     = Vector_Copy(size);
 
-        // Cog Button
-        let cog_position = Vector_Create(gap, gap);
-        let cog_size     = Vector_Create(icon_width, icon_height);
-        this.cogButton = new UIButton(
-            textureCog,
-            chroma("white"),
-            chroma("white").darken(2),
-            chroma("white").darken(3),
-            cog_position,
-            cog_size,
-            this.onCogClicked
-        );
+        this.isMouseInside = false;
 
-        // Reload Button
-        let reload_position = Vector_Create(this.size.x - gap - icon_width, gap);
-        let reload_size     = Vector_Create(icon_width, icon_height);
-        this.reloadButton = new UIButton(
-            textureReset,
-            chroma("white"),
-            chroma("white").darken(2),
-            chroma("white").darken(3),
-            reload_position,
-            reload_size,
-            this.onReloadClicked
-        );
-
+        this.callback = callback;
     } // ctor
 
     //--------------------------------------------------------------------------
     update(dt)
     {
-        this.cogButton   .update(dt);
-        this.reloadButton.update(dt);
-    }
+        if(this.isMouseInside &&
+           Mouse_IsClicked    &&
+           !Utils_IsNullOrUndefined(this.callback))
+        {
+            this.callback(this);
+        }
+    } // update
 
     //--------------------------------------------------------------------------
     draw()
     {
         Canvas_Push();
-            // @todo(stdmatt): Debug draw...
             Canvas_Translate(this.position.x, this.position.y);
-            Canvas_SetFillStyle("magenta");
-            // Canvas_FillRect(0, 0, this.size.x, this.size.y);
 
-            this.cogButton   .draw();
-            this.reloadButton.draw();
+            // @XXX(stdmatt): Doing here because we don't have access to the
+            // transform matrix on update method.
+            this._updateMouseStatus();
+            if(this.isMouseInside) {
+                if(Mouse_IsDown) {
+                    this.currColor = this.clickColor;
+                } else {
+                    this.currColor = this.hoverColor;
+                }
+
+            } else {
+                this.currColor = this.srcColor;
+            }
+            DrawWithTint(this.texture, 0, 0, this.size.x, this.size.y, this.currColor);
         Canvas_Pop();
     } // draw
 
     //--------------------------------------------------------------------------
-    onCogClicked(b)
+    _updateMouseStatus()
     {
+        let t = CurrContext.getTransform();
+        let tx = t.e;
+        let ty = t.f;
 
-    }
+        let contains = Math_RectContainsPoint(
+            tx, ty,
+            this.size.x, this.size.y,
+            Mouse_X, Mouse_Y
+        );
 
-    //--------------------------------------------------------------------------
-    onReloadClicked(b)
-    {
-        ResetGame();
-    }
-}; // class StatusHud
+        this.isMouseInside = contains;
+    } // _updateMouseStatus
+}; // class UIButton
