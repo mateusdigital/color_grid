@@ -118,19 +118,6 @@ class Board
                 }
             }
         }
-
-
-        // for(let i = 0; i < this.ownedBlocks.length; ++i) {
-        //     let block = this.ownedBlocks[i];
-        //     block.update(dt);
-        //     if(block.changingColor) {
-        //         this.canChangeColors = false;
-        //     }
-
-        //     if(this.state == GAME_STATE_VICTORY && !block.changingColor) {
-        //         this.changeColor(palette.getRandomIndex());
-        //     }
-        // }
     } // update
 
     //--------------------------------------------------------------------------
