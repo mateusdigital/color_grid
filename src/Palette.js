@@ -37,7 +37,7 @@ class Palette
         // }
 
         this._getPaletteColors();
-        this.colors.push(chroma("gray"));
+        this.colors.push(chroma("black"));
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -49,7 +49,7 @@ class Palette
     //--------------------------------------------------------------------------
     getDefeatIndex()
     {
-        return this.colorsCount;
+        return this.colors.length-1;
     }
 
     //--------------------------------------------------------------------------

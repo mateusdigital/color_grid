@@ -26,18 +26,21 @@ class Block
         this.position = Vector_Create(x, y);
         this.size     = Vector_Create(w, h);
 
-        this.colorIndex       = colorIndex;
+        this.colorIndex       = palette.getDefeatIndex();
         this.targetColorIndex = colorIndex;
 
         this.timeToChangeColor    = 0;
-        this.maxTimeToChangeColor = 0.5;
+        this.maxTimeToChangeColor = Math_Random(0, 1);
         this.changingColor        = false;
+
+        this.isEntryColorChange = true;
+        this.changeColor(this.targetColorIndex);
     } // ctor
 
     //--------------------------------------------------------------------------
     changeColor(colorIndex)
     {
-        if(this.targetColorIndex == colorIndex) {
+        if(this.targetColorIndex == colorIndex && !this.isEntryColorChange) {
             return;
         }
 
@@ -58,6 +61,11 @@ class Block
             this.timeToChangeColor = this.maxTimeToChangeColor;
             this.colorIndex        = this.targetColorIndex;
             this.changingColor      = false;
+
+            if(this.isEntryColorChange) {
+                this.isEntryColorChange = false;
+                this.maxTimeToChangeColor = 0.5;
+            }
         }
     } // update
 
@@ -86,7 +94,7 @@ class Block
             }
 
             Canvas_SetFillStyle(color);
-            Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, 10);
+            Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/4);
         Canvas_Pop();
     } // draw
 }; // class Block
