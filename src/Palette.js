@@ -37,8 +37,16 @@ class Palette
         // }
 
         this._getPaletteColors();
-        this.colors.push(chroma("black"));
+        this.colors.push(chroma("gray").brighten(3));
+
+
+        this.backgroundColor = chroma("#0b1420");
     } // ctor
+
+    getBackgroundColor()
+    {
+        return this.backgroundColor;
+    }
 
     //--------------------------------------------------------------------------
     getRandomIndex()
@@ -65,8 +73,8 @@ class Palette
         let palettes = [
 
             // [ "#FF9671", "#E57B89", "#B56D97", "#7D6592", "#4B597A", "#2F4858",]
-            ["#FF9671", "#F27D88", "#D26F9D", "#A36AAA", "#6967A9", "#1B6299"],
-            ["#7D90F2", "#E089E4", "#FF8ABC", "#FFA38D", "#FFCD6B", "#F9F871"]
+            ["#e179bc", "#5563a1", "#b15232", "#f68642", "#ffbd4f", "#f7553a"],
+
         ];
 
         let pal_index = Math_RandomInt(0, palettes.length);

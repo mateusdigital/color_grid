@@ -87,10 +87,10 @@ async function Setup()
 //------------------------------------------------------------------------------
 function Draw(dt)
 {
-    Canvas_ClearWindow("#030303");
     if(!loaded) {
         return;
     }
+    Canvas_ClearWindow(palette.getBackgroundColor());
 
     colorSelector.update(dt);
     statusHud    .update(dt);
