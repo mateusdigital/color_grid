@@ -77,6 +77,8 @@ class Board
         this.movesCount    = 0;
         this.maxMovesCount = this.blocksCount.x * this.blocksCount.y;
 
+        this.canChangeColors = true;
+
         this._initializeBlocks();
     } // ctor
 
@@ -84,7 +86,8 @@ class Board
     changeColor(colorIndex)
     {
         if(this.selectedColorIndex == colorIndex ||
-           this.state != GAME_STATE_CONTINUE)
+           this.state != GAME_STATE_CONTINUE     ||
+           !this.canChangeColors)
         {
             return;
         }
@@ -105,9 +108,13 @@ class Board
     //--------------------------------------------------------------------------
     update(dt)
     {
+        this.canChangeColors = true;
         for(let i = 0; i < this.ownedBlocks.length; ++i) {
             let block = this.ownedBlocks[i];
             block.update(dt);
+            if(block.changingColor) {
+                this.canChangeColors = false;
+            }
 
             if(this.state == GAME_STATE_VICTORY && !block.changingColor) {
                 this.changeColor(palette.getRandomIndex());
