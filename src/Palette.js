@@ -37,7 +37,7 @@ class Palette
         // }
 
         this._getPaletteColors();
-        this.colors.push(chroma("gray").brighten(3));
+        this.colors.push(chroma("white"));
 
 
         this.backgroundColor = chroma("#0b1420");

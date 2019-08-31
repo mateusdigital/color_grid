@@ -94,7 +94,7 @@ class Block
             }
 
             Canvas_SetFillStyle(color);
-            Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/4);
+            Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/6);
         Canvas_Pop();
     } // draw
 }; // class Block

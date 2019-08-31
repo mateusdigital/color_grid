@@ -67,7 +67,7 @@ class ColorSelectorHud
             Canvas_SetRenderTarget(null);
 
 
-            let pos_x = size.x * (i + 1) + (gap * i);
+            let pos_x = (size.x + gap) * (i + 1);
             let b = new UIButton(
                 c,
                 palette.getColor(i),

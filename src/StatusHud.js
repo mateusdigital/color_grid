@@ -16,7 +16,6 @@
 //   Implements the top hud of the game.                                      //
 //---------------------------------------------------------------------------~//
 
-
 //------------------------------------------------------------------------------
 class StatusHud
 {
@@ -56,6 +55,9 @@ class StatusHud
             this.onReloadClicked
         );
 
+        // Score
+        let score_position = Vector_Create(this.size.x / 2, this.size.y / 2);
+        this.scoreText = new UIText("Score: 0", score_position, 20, "arial");
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -71,11 +73,14 @@ class StatusHud
         Canvas_Push();
             // @todo(stdmatt): Debug draw...
             Canvas_Translate(this.position.x, this.position.y);
-            Canvas_SetFillStyle("magenta");
+
             // Canvas_FillRect(0, 0, this.size.x, this.size.y);
 
             this.cogButton   .draw();
             this.reloadButton.draw();
+
+            Canvas_SetFillStyle("white");
+            this.scoreText.draw();
         Canvas_Pop();
     } // draw
 

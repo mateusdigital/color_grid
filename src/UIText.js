@@ -5,30 +5,43 @@
 //                   \__ \ || (_| | | | | | | (_| | |_| |_                    //
 //                   |___/\__\__,_|_| |_| |_|\__,_|\__|\__|                   //
 //                                                                            //
-//  File      : GameOptions.js                                                //
+//  File      : UIText.js                                                     //
 //  Project   : color_grid                                                    //
-//  Date      : Aug 31, 2019                                                  //
+//  Date      : Aug 28, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
 //  Copyright : stdmatt - 2019                                                //
 //                                                                            //
 //  Description :                                                             //
-//   Current game options.                                                    //
+//                                                                            //
 //---------------------------------------------------------------------------~//
 
-//------------------------------------------------------------------------------
-class GameOptions
+//----------------------------------------------------------------------------//
+class UIText
 {
     //--------------------------------------------------------------------------
-    constructor()
+    constructor(str, position, fontSize, font)
     {
-        // Colors
-        this.colorsCount = 5;
+        this.str      = str;
+        this.position = Vector_Copy(position);
 
-        // Grid
-        this.gridWidth  = Canvas_Width - 20;
-        this.gridHeight = this.gridWidth;
-        this.gridRows   = 8;
-        this.gridCols   = 8;
+        this.fontSize = fontSize;
+        this.font     = font;
+        this.fontStr  = String_Cat(fontSize, "pt ", font);
+
+        Canvas_Push();
+            CurrContext.font = this.fontStr;
+            this.width  = CurrContext.measureText(str).width;
+            this.height = parseInt(CurrContext.font);
+        Canvas_Pop();
     } // ctor
-}; // class GameOptions
+
+    draw()
+    {
+        Canvas_Push();
+            Canvas_Translate(this.position.x, this.position.y);
+            CurrContext.font = this.fontStr;
+            CurrContext.fillText(this.str, -this.width / 2, this.height / 2);
+        Canvas_Pop();
+    } // draw
+}; // class Text
