@@ -47,7 +47,7 @@ function ResetGame()
     );
 
     colorSelector = new ColorSelectorHud(
-        -Canvas_Width / 2,  Canvas_Edge_Bottom - 50,
+        -Canvas_Width / 2,  Canvas_Edge_Bottom - 60,
          Canvas_Width,      50,
          gameOptions.colorsCount
     );
@@ -99,30 +99,6 @@ function Draw(dt)
     colorSelector.draw();
     statusHud    .draw();
     board        .draw();
-}
-
-
-//----------------------------------------------------------------------------//
-// Input                                                                      //
-//----------------------------------------------------------------------------//
-function MouseDown()
-{
-    mouseIsDown = true;
-    mouseClick = false;
-}
-
-function MouseUp()
-{
-    mouseIsDown  = false;
-    mouseIsClick = false;
-}
-
-function MouseClick()
-{
-    if(colorSelector.hoveredColorIndex != PALETTE_INVALID_COLOR_INDEX) {
-        board.changeColor(colorSelector.hoveredColorIndex);
-    }
-    Log("Mouse Click");
 }
 
 
