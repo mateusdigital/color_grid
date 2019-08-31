@@ -75,7 +75,7 @@ class Board
 
         this.state         = GAME_STATE_CONTINUE;
         this.movesCount    = 0;
-        this.maxMovesCount = this.blocksCount.x * this.blocksCount.y;
+        this.maxMovesCount = (this.blocksCount.x * this.blocksCount.y);
 
         this.canChangeColors = true;
 
@@ -101,6 +101,7 @@ class Board
             this._setAllBlocksToBeOwnedAndDefeated();
         } else if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
             this.state = GAME_STATE_VICTORY;
+            this._setAllBlocksToBeOwnedVictory();
         }
     } // changeColor
 
@@ -116,6 +117,14 @@ class Board
                 if(block.changingColor) {
                     this.canChangeColors = false;
                 }
+                // else {
+                //     if(this.state == GAME_STATE_VICTORY) {
+                //         block.maxTimeToChangeColor = 1;
+                //         block.changeColor(palette.getRandomIndex());
+                //     } else if(this.state == GAME_STATE_DEFEAT) {
+                //         block.changeColor(palette.getDefeatIndex());
+                //     }
+                // }
             }
         }
     } // update
@@ -129,7 +138,7 @@ class Board
                 for(let x = 0; x < this.blocksCount.x; ++x) {
                     let block = this.blocks[y][x];
                     let s = 1;
-                    if(block.isOwned) {
+                    if(block.isOwned && this.state == GAME_STATE_CONTINUE) {
                         s = Math_Sin(Time_Total * 4) + 0.8;
                         s = Math_Map(s, -1, 1, 0.8, 1);
                     }
@@ -208,6 +217,19 @@ class Board
         this.ownedBlocks.push(block); // left most is always owned.
         this.changeColor(block.targetColorIndex);
     } // _initializeBlocks()
+
+       //--------------------------------------------------------------------------
+       _setAllBlocksToBeOwnedVictory()
+       {
+           this.ownedBlocks = [];
+           for(let y = 0; y < this.blocksCount.y; ++y) {
+               for(let x = 0; x < this.blocksCount.x; ++x) {
+                   let block = this.blocks[y][x];
+                   block.setVictory();
+                   this.ownedBlocks.push(block);
+               }
+           }
+       } // _setAllBlocksToBeOwnedAndDefeated
 
     //--------------------------------------------------------------------------
     _setAllBlocksToBeOwnedAndDefeated()

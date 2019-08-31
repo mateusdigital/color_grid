@@ -36,8 +36,29 @@ class Block
         this.isEntryColorChange = true;
         this.changeColor(this.targetColorIndex);
 
-        this.isOwned = false;
+        this.isOwned   = false;
+        this.isVictory = false;
+
+        this.force = null;
+
+        this.rotation       = 0;
+        this.targetRotation = 0;
     } // ctor
+
+    setVictory()
+    {
+        setTimeout(()=>{
+            this.isVictory = true;
+            let MX = 3;
+            let x = Math_RandomInt(-MX, MX);
+            let y = -90 //Math_RandomInt(-60, -60);
+
+            this.force = Vector_Create(x, y);
+            this.acc   = 30;
+            this.rotation = Math_Map(x, -MX, +MX, -MATH_PI, MATH_PI);
+            this.v = Vector_Create(0, 0);
+        }, Math_RandomInt(200, 1200));
+    }
 
     //--------------------------------------------------------------------------
     changeColor(colorIndex)
@@ -67,6 +88,19 @@ class Block
                 }
             }
         }
+
+        if(this.isVictory) {
+            // this.force.x *= 0.9;
+            this.force.y *= 0.9;
+
+            let acc = this.acc + this.force.y;
+            this.v.x = this.force.x;
+            this.v.y += acc * dt;
+
+            this.position.x += this.v.x * dt;
+            this.position.y += this.v.y * dt;
+        }
+
     } // update
 
     //--------------------------------------------------------------------------
@@ -94,6 +128,7 @@ class Block
             }
 
             Canvas_Scale(s);
+            Canvas_Rotate(this.rotation);
 
             Canvas_SetFillStyle(color);
             Canvas_FillRoundedRect(-w/2, -h/2, w-1, h-1, w/6);
