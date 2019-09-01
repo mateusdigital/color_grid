@@ -117,14 +117,6 @@ class Board
                 if(block.changingColor) {
                     this.canChangeColors = false;
                 }
-                // else {
-                //     if(this.state == GAME_STATE_VICTORY) {
-                //         block.maxTimeToChangeColor = 1;
-                //         block.changeColor(palette.getRandomIndex());
-                //     } else if(this.state == GAME_STATE_DEFEAT) {
-                //         block.changeColor(palette.getDefeatIndex());
-                //     }
-                // }
             }
         }
     } // update
@@ -239,7 +231,7 @@ class Board
             for(let x = 0; x < this.blocksCount.x; ++x) {
                 let block = this.blocks[y][x];
                 block.changeColor(palette.getDefeatIndex());
-
+                block.setDefeat();
                 this.ownedBlocks.push(block);
             }
         }
