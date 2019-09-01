@@ -7,7 +7,7 @@
 //                                                                            //
 //  File      : ColorGrid.js                                                  //
 //  Project   : color_grid                                                    //
-//  Date      : Aug 15, 2019                                                  //
+//  Date      : Aug 27, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
 //  Copyright : stdmatt - 2019                                                //
@@ -20,68 +20,85 @@
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
-let palette;
-let board;
-let colorSelector;
+let gameOptions   = null;
+let palette       = null;
+let board         = null;
+let colorSelector = null;
+let statusHud     = null;
 
+let textureCog   = null;
+let textureReset = null;
+let loaded       = false;
+
+
+//----------------------------------------------------------------------------//
+// Helper Functions                                                           //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+function ResetGame()
+{
+    palette = new Palette(gameOptions.colorsCount);
+
+    board = new Board(
+        -gameOptions.gridWidth/2,  -gameOptions.gridHeight/2,
+         gameOptions.gridWidth,     gameOptions.gridHeight,
+         gameOptions.gridRows,      gameOptions.gridCols,
+         gameOptions.colorsCount
+    );
+
+    colorSelector = new ColorSelectorHud(
+        -Canvas_Width / 2,  Canvas_Edge_Bottom - 60,
+         Canvas_Width,      50,
+         gameOptions.colorsCount
+    );
+}
+
+//------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-function Setup()
+async function Setup()
 {
-
-
-    let color_count = 4;
-    let width  = Canvas_Width - 20;
-    let height = width;
-    let rows = 5;
-    let cols = 5;
-
-    palette       = new Palette(color_count);
-    board         = new Board(-width/2, -height/2, width, height, rows, cols, color_count);
-    colorSelector = new ColorSelectorHud(
-        -Canvas_Width / 2, Canvas_Edge_Bottom - 50,
-        Canvas_Width,      50,
-        color_count
+    //
+    // Load the textures - Game can't run without it...
+    let loaded_textures = await LoadTextures(
+        "./res/icon_cog.png",
+        "./res/icon_reset.png"
     );
-}
+    textureCog   = loaded_textures["./res/icon_cog.png"];
+    textureReset = loaded_textures["./res/icon_reset.png"];
+    loaded = true;
 
+    //
+    // Create the objects that are need to be created only once.
+    gameOptions = new GameOptions();
+    statusHud   = new StatusHud(
+        -Canvas_Width / 2, Canvas_Edge_Top,
+         Canvas_Width,      50,
+    );
+
+    //
+    // Create the objects that depends on options...
+    ResetGame();
+}
 
 //------------------------------------------------------------------------------
 function Draw(dt)
 {
-    Canvas_ClearWindow("#030303");
+    if(!loaded) {
+        return;
+    }
+    Canvas_ClearWindow(palette.getBackgroundColor());
 
     colorSelector.update(dt);
-    board.update(dt);
+    statusHud    .update(dt);
+    board        .update(dt);
 
-    board.draw();
     colorSelector.draw();
-}
-
-
-//----------------------------------------------------------------------------//
-// Input                                                                      //
-//----------------------------------------------------------------------------//
-function MouseDown()
-{
-    mouseIsDown = true;
-    mouseClick = false;
-}
-
-function MouseUp()
-{
-    mouseIsDown  = false;
-    mouseIsClick = false;
-}
-
-function MouseClick()
-{
-    if(colorSelector.hoveredColorIndex != PALETTE_INVALID_COLOR_INDEX) {
-        board.changeColor(colorSelector.hoveredColorIndex);
-    }
+    statusHud    .draw();
+    board        .draw();
 }
 
 
