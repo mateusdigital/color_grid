@@ -77,7 +77,7 @@ class UIButton
     //--------------------------------------------------------------------------
     _updateMouseStatus()
     {
-        let t = CurrContext.getTransform();
+        let t = GetContextTransform();
         let tx = t.e;
         let ty = t.f;
 
