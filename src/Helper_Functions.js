@@ -120,7 +120,8 @@ function DrawWithTint(img, dx, dy, dw, dh, tint)
 function GetContextTransform()
 {
     if(typeof(CurrContext.getTransform) == "function") {
-        return CurrContext.getTransform();
+        let t = CurrContext.getTransform()
+        return [t.a, t.b, t.c, t.d, t.e, t.f];
     }
 
     if(CurrContext.currentTransform) {
