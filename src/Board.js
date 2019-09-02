@@ -66,7 +66,7 @@ class Board
     {
         this.position    = Vector_Create (x, y);
         this.size        = Vector_Create (w, h);
-        this.blocksCount = Vector_Create (r, c);
+        this.blocksCount = Vector_Create (c, r);
         this.blocks      = Array_Create2D(r, c);
         this.colorsCount = colorsCount;
 
