@@ -78,7 +78,7 @@ class Board
         this.maxMovesCount = (this.blocksCount.x * this.blocksCount.y);
 
         this.canChangeColors = true;
-
+        this.isDone          = false;
 
         this._initializeBlocks();
     } // ctor
@@ -111,6 +111,7 @@ class Board
     update(dt)
     {
         this.canChangeColors = true;
+        this.isDone          = true;
         for(let y = 0; y < this.blocksCount.y; ++y) {
             for(let x = 0; x < this.blocksCount.x; ++x) {
                 let block = this.blocks[y][x];
@@ -118,7 +119,9 @@ class Board
                 if(block.changingColor) {
                     this.canChangeColors = false;
                 }
-
+                if(!block.isDone) {
+                    this.isDone = false;
+                }
             }
         }
     } // update

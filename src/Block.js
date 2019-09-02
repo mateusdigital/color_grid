@@ -32,8 +32,8 @@ const BLOCK_VICTORY_ANIM_ANGLE_MAX = +MATH_PI;
 const BLOCK_VICTORY_ANIM_START_DELAY_MIN = 0.5;
 const BLOCK_VICTORY_ANIM_START_DELAY_MAX = 1.5;
 
-const BLOCK_VICTORY_ANIM_TIME_MIN = 0.5;
-const BLOCK_VICTORY_ANIM_TIME_MAX = 1.0;
+const BLOCK_VICTORY_ANIM_TIME_MIN = 1.0;
+const BLOCK_VICTORY_ANIM_TIME_MAX = 1.8;
 
 
 //------------------------------------------------------------------------------
@@ -158,7 +158,8 @@ class Block
             if(this.isPlayingVictoryAnimation) {
                 let c = this.victoryAnimationTimer.current;
                 let d = this.victoryAnimationTimer.duration;
-                s = Math_Map(c, 0, d, 1, 0.5);
+
+                s = Math_Map(c, 0, d, 1, 0.3);
             }
 
             Canvas_Scale(s);

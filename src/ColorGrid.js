@@ -99,6 +99,10 @@ function Draw(dt)
     colorSelector.draw();
     statusHud    .draw();
     board        .draw();
+
+    if(board.isDone) {
+        ResetGame();
+    }
 }
 
 
