@@ -25,6 +25,7 @@ let palette       = null;
 let board         = null;
 let colorSelector = null;
 let statusHud     = null;
+let optionsPanel  = null;
 
 let textureCog   = null;
 let textureReset = null;
@@ -54,6 +55,10 @@ function ResetGame()
 }
 
 //------------------------------------------------------------------------------
+function ShowOptionsPanel()
+{
+    optionsPanel.show();
+}
 
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
@@ -83,7 +88,9 @@ async function Setup()
     // Create the objects that depends on options...
     ResetGame();
     statusHud.updateMovesCount();
+    optionsPanel = new OptionsPanel();
 }
+
 //------------------------------------------------------------------------------
 function Draw(dt)
 {
@@ -92,13 +99,19 @@ function Draw(dt)
     }
     Canvas_ClearWindow(palette.getBackgroundColor());
 
-    colorSelector.update(dt);
-    statusHud    .update(dt);
-    board        .update(dt);
+    if(optionsPanel.isAnimating || optionsPanel.isVisible) {
+        optionsPanel.update(dt);
+    } else {
+        colorSelector.update(dt);
+        statusHud    .update(dt);
+        board        .update(dt);
+
+    }
 
     colorSelector.draw();
     statusHud    .draw();
     board        .draw();
+    optionsPanel.draw();
 
     if(board.isDone) {
         ResetGame();

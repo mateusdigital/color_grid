@@ -97,12 +97,14 @@ class Board
         this._floodFill(colorIndex);
 
         ++this.movesCount;
-        if(this.movesCount > this.maxMovesCount) {
-            this.state = GAME_STATE_DEFEAT;
-            this._setAllBlocksToBeOwnedAndDefeated();
-        } else if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
+        // Let's make the victory counts in the last possible move...
+        if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
             this.state = GAME_STATE_VICTORY;
             this._setAllBlocksToBeOwnedVictory();
+        }
+        else if(this.movesCount > this.maxMovesCount) {
+            this.state = GAME_STATE_DEFEAT;
+            this._setAllBlocksToBeOwnedAndDefeated();
         }
     } // changeColor
 

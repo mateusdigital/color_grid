@@ -117,10 +117,4 @@ class UISlider
             this.isMouseInside = contains;
         Canvas_Pop();
     } // draw
-
-    //--------------------------------------------------------------------------
-    _updateMouseStatus()
-    {
-
-    } // _updateMouseStatus
 }; // class UIButton
