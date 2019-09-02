@@ -22,14 +22,16 @@ class UISlider
 {
     //--------------------------------------------------------------------------
     constructor(
-        fillColor, sliderColor, handleColor,
+        fillColor, sliderColor,
+        handleColor, handleHoverColor,
         position, size,
         callback)
     {
-        this.fillColor       = fillColor;
-        this.sliderColor     = sliderColor;
-        this.handleColor     = handleColor;
-        this.currHandleColor = handleColor;
+        this.fillColor        = fillColor;
+        this.sliderColor      = sliderColor;
+        this.handleColor      = handleColor;
+        this.handleHoverColor = handleHoverColor;
+        this.currHandleColor  = handleColor;
 
         this.position = Vector_Copy(position);
         this.size     = Vector_Copy(size);
@@ -37,11 +39,21 @@ class UISlider
         this.isMouseInside = false;
         this.callback      = callback;
 
-        this.value       = 0.5;
-        this.originalValue = 0.5;
+        this.value         = -1;
+        this.originalValue = -1;
         this.firstPress  = false;
         this.firstPressX = null;
     } // ctor
+
+    updateValue(value)
+    {
+        if(value != this.value) {
+            this.value = value;
+            if(this.callback != null) {
+                this.callback(this, this.value);
+            }
+        }
+    }
 
     //--------------------------------------------------------------------------
     update(dt)
@@ -54,23 +66,19 @@ class UISlider
         }
 
         if(!Mouse_IsDown) {
-            this.firstPress  = false;
-            this.firstPressX = null;
-            this.originalValue = this.value;
+            this.firstPress      = false;
+            this.firstPressX     = null;
+            this.originalValue   = this.value;
+            this.currHandleColor = this.handleColor
         }
 
         if(this.firstPressX != null) {
+            this.currHandleColor = this.handleHoverColor;
             let diff  = (Mouse_X - this.firstPressX) / this.size.x;
             let value = Math_Clamp(0, 1, this.originalValue + diff);
 
-            if(value != this.value) {
-                this.value = value;
-                if(this.callback != null) {
-                    this.callback(this, this.value);
-                }
-            }
+            this.updateValue(value);
         }
-
     } // update
 
     //--------------------------------------------------------------------------
