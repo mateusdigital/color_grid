@@ -36,6 +36,17 @@ class UIText
         Canvas_Pop();
     } // ctor
 
+
+    setString(str)
+    {
+        Canvas_Push();
+            CurrContext.font = this.fontStr;
+
+            this.str   = str;
+            this.width = CurrContext.measureText(str).width;
+        Canvas_Pop();
+    }
+
     draw()
     {
         Canvas_Push();
