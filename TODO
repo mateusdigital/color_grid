@@ -3,7 +3,7 @@
 [DONE] - Align the color selectors button on the bottom hud.
 [DONE] - Make the top hud shows the current and max moves on the game.
 - Implement the options screen.
-    - Implement the UI radio button.
+    [DONE] - Implement the UI radio button.
     - Implement the color theme selectors.
     - Make the options apply to the GameOptions object.
     - Make the transitions of in / out of the screen.
