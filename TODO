@@ -2,9 +2,9 @@
 [DONE] - Start new game after the defeat  animation finishes to play.
 [DONE] - Align the color selectors button on the bottom hud.
 [DONE] - Make the top hud shows the current and max moves on the game.
-- Implement the options screen.
-    [DONE] - Implement the UI radio button.
-    - Implement the color theme selectors.
-    - Make the options apply to the GameOptions object.
-    - Make the transitions of in / out of the screen.
+[DONE] - Implement the options screen.
+    [DONE]  - Implement the UI radio button.
+    [WONTDO]- Implement the color theme selectors.
+    [DONE] - Make the options apply to the GameOptions object.
+    [DONE] - Make the transitions of in / out of the screen.
 - Optimize the Board update method to just update the blocks that are needed.
