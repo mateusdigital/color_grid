@@ -35,6 +35,12 @@ const BLOCK_VICTORY_ANIM_START_DELAY_MAX = 1.5;
 const BLOCK_VICTORY_ANIM_TIME_MIN = 1.0;
 const BLOCK_VICTORY_ANIM_TIME_MAX = 1.8;
 
+const BLOCK_DEFEAT_ANIM_START_DELAY_MIN = 0.0;
+const BLOCK_DEFEAT_ANIM_START_DELAY_MAX = 1.5;
+
+const BLOCK_DEFEAT_ANIM_TIME_MIN = 0.5;
+const BLOCK_DEFEAT_ANIM_TIME_MAX = 1.5;
+
 
 //------------------------------------------------------------------------------
 class Block
@@ -64,14 +70,27 @@ class Block
         this.victoryAnimationDelayTimer = this._calcVictoryAnimationStartDelay();
         this.victoryAnimationTimer      = this._calcVictoryAnimationTime      ();
         this.victoryAnimationForce      = this._randomVictoryAnimationForce   ();
-        this.victoryAnimationAngle      = this._calcEndRotationAngle          ();
+        this.victoryAnimationAngle      = this._calcVictoryRotationAngle      ();
         this.victoryAnimationVelocity   = Vector_Create(0, 0);
+
+
+        // Defeat Animation.
+        this.isPlayingDefeatAnimation  = false;
+        this.defeatAnimationDelayTimer = this._calcDefeatAnimationStartDelay();
+        this.defeatAnimationTimer      = this._calcDefeatAnimationTime      ();
     } // ctor
+
 
     setVictory()
     {
         this.isPlayingVictoryAnimation = true;
         this.victoryAnimationDelayTimer.start();
+    }
+
+    setDefeat()
+    {
+        this.isPlayingDefeatAnimation = true;
+        this.defeatAnimationDelayTimer.start();
     }
 
     //--------------------------------------------------------------------------
@@ -92,6 +111,8 @@ class Block
     //--------------------------------------------------------------------------
     update(dt)
     {
+        //
+        // Change Color.
         if(this.changingColor) {
             this.changeColorTimer.update(dt);
             if(this.changeColorTimer.isDone) {
@@ -105,6 +126,8 @@ class Block
             }
         }
 
+        //
+        // Victory Animation.
         if(this.isPlayingVictoryAnimation) {
             this.victoryAnimationDelayTimer.update(dt);
             if(this.victoryAnimationDelayTimer.isDone) {
@@ -126,6 +149,22 @@ class Block
                     this.position.y += this.victoryAnimationVelocity.y * dt;
 
                     this.rotation += this.victoryAnimationAngle * dt;
+                }
+            }
+        }
+
+        //
+        // Defeat Animation.
+        if(this.isPlayingDefeatAnimation) {
+            this.defeatAnimationDelayTimer.update(dt);
+            if(this.defeatAnimationDelayTimer.isDone) {
+                if(!this.defeatAnimationTimer.started) {
+                    this.defeatAnimationTimer.start();
+                } else {
+                    this.defeatAnimationTimer.update(dt);
+                    if(this.defeatAnimationTimer.isDone) {
+                        this.isDone = true;
+                    }
                 }
             }
         }
@@ -154,12 +193,19 @@ class Block
             }
 
             //
-            // Ending Animation
+            // Victory Animation
             if(this.isPlayingVictoryAnimation) {
                 let c = this.victoryAnimationTimer.current;
                 let d = this.victoryAnimationTimer.duration;
 
                 s = Math_Map(c, 0, d, 1, 0.3);
+            }
+
+            //
+            // Defeat Animation.
+            if(this.isPlayingDefeatAnimation) {
+                color = chroma.mix(color, "black", this.defeatAnimationTimer.ratio);
+                s = 1 - this.defeatAnimationTimer.ratio;
             }
 
             Canvas_Scale(s);
@@ -174,27 +220,41 @@ class Block
     //--------------------------------------------------------------------------
     _calcVictoryAnimationStartDelay()
     {
-        let t = Math_Random(
+        return this._buildRandomTimer(
             BLOCK_VICTORY_ANIM_START_DELAY_MIN,
             BLOCK_VICTORY_ANIM_START_DELAY_MAX
         );
-
-        return new Timer(t);
     } // _calcVictoryAnimationStartDelay
 
     //--------------------------------------------------------------------------
     _calcVictoryAnimationTime()
     {
-        let t = Math_Random(
+        return this._buildRandomTimer(
             BLOCK_VICTORY_ANIM_TIME_MIN,
             BLOCK_VICTORY_ANIM_TIME_MAX
         );
-
-        return new Timer(t);
     } // _calcVictoryAnimationStartDelay
 
     //--------------------------------------------------------------------------
-    _calcEndRotationAngle()
+    _calcDefeatAnimationStartDelay()
+    {
+        return this._buildRandomTimer(
+            BLOCK_DEFEAT_ANIM_START_DELAY_MIN,
+            BLOCK_DEFEAT_ANIM_START_DELAY_MAX
+        );
+    } // _calcDefeatAnimationStartDelay
+
+    //--------------------------------------------------------------------------
+    _calcDefeatAnimationTime()
+    {
+        return this._buildRandomTimer(
+            BLOCK_DEFEAT_ANIM_TIME_MIN,
+            BLOCK_DEFEAT_ANIM_TIME_MAX
+        );
+    } // _calcDefeatAnimationStartDelay
+
+    //--------------------------------------------------------------------------
+    _calcVictoryRotationAngle()
     {
         return Math_Map(
             this.victoryAnimationForce.x,
@@ -203,7 +263,7 @@ class Block
             BLOCK_VICTORY_ANIM_ANGLE_MIN,
             BLOCK_VICTORY_ANIM_ANGLE_MAX
         );
-    } // _calcEndRotationAngle
+    } // _calcVictoryRotationAngle
 
     //--------------------------------------------------------------------------
     _randomVictoryAnimationForce()
@@ -220,4 +280,10 @@ class Block
         return Vector_Create(x, y);
     } // _randomVictoryAnimationForce
 
+    //--------------------------------------------------------------------------
+    _buildRandomTimer(m, M)
+    {
+        let t = Math_Random(m, M);
+        return new Timer(t);
+    } // _buildRandomTimer
 }; // class Block

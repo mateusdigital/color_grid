@@ -236,8 +236,8 @@ class Board
         for(let y = 0; y < this.blocksCount.y; ++y) {
             for(let x = 0; x < this.blocksCount.x; ++x) {
                 let block = this.blocks[y][x];
-                block.changeColor(palette.getDefeatIndex());
-
+                // block.changeColor(palette.getDefeatIndex());
+                block.setDefeat();
                 this.ownedBlocks.push(block);
             }
         }
