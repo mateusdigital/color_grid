@@ -60,8 +60,15 @@ class UISlider
         }
 
         if(this.firstPressX != null) {
-            let diff = (Mouse_X - this.firstPressX) / this.size.x;
-            this.value = Math_Clamp(0, 1, this.originalValue + diff);
+            let diff  = (Mouse_X - this.firstPressX) / this.size.x;
+            let value = Math_Clamp(0, 1, this.originalValue + diff);
+
+            if(value != this.value) {
+                this.value = value;
+                if(this.callback != null) {
+                    this.callback(this, this.value);
+                }
+            }
         }
 
     } // update
