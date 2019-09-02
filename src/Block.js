@@ -48,8 +48,7 @@ class Block
         this.colorIndex       = palette.getDefeatIndex();
         this.targetColorIndex = colorIndex;
 
-        this.timeToChangeColor    = 0;
-        this.maxTimeToChangeColor = Math_Random(0, 1);
+        this.changeColorTimer = new Timer(Math_Random(0, 1));
         this.changingColor        = false;
         this.isEntryColorChange   = true;
 
@@ -81,24 +80,24 @@ class Block
             return;
         }
 
-        this.timeToChangeColor = 0;
-        this.targetColorIndex  = colorIndex;
-        this.changingColor     = true;
+        this.changeColorTimer.start();
+
+        this.targetColorIndex = colorIndex;
+        this.changingColor    = true;
     } // changeColor
 
     //--------------------------------------------------------------------------
     update(dt)
     {
         if(this.changingColor) {
-            this.timeToChangeColor += dt
-            if(this.timeToChangeColor >= this.maxTimeToChangeColor) {
-                this.timeToChangeColor = this.maxTimeToChangeColor;
+            this.changeColorTimer.update(dt);
+            if(this.changeColorTimer.isDone) {
                 this.colorIndex        = this.targetColorIndex;
                 this.changingColor      = false;
 
                 if(this.isEntryColorChange) {
                     this.isEntryColorChange = false;
-                    this.maxTimeToChangeColor = 0.5;
+                    this.changeColorTimer.duration = 0.5;
                 }
             }
         }
@@ -145,11 +144,7 @@ class Block
                 let srcColor = palette.getColor(this.colorIndex);
                 let dstColor = color;
 
-                color = chroma.mix(
-                    srcColor,
-                    dstColor,
-                    this.timeToChangeColor / this.maxTimeToChangeColor
-                );
+                color = chroma.mix(srcColor, dstColor, this.changeColorTimer.ratio);
             }
 
             //
