@@ -32,6 +32,9 @@ const BLOCK_VICTORY_ANIM_ANGLE_MAX = +MATH_PI;
 const BLOCK_VICTORY_ANIM_START_DELAY_MIN = 0.5;
 const BLOCK_VICTORY_ANIM_START_DELAY_MAX = 1.5;
 
+const BLOCK_VICTORY_ANIM_TIME_MIN = 0.5;
+const BLOCK_VICTORY_ANIM_TIME_MAX = 1.0;
+
 
 //------------------------------------------------------------------------------
 class Block
@@ -59,11 +62,10 @@ class Block
         // Victory Animation.
         this.isPlayingVictoryAnimation  = false;
         this.victoryAnimationDelayTimer = this._calcVictoryAnimationStartDelay();
+        this.victoryAnimationTimer      = this._calcVictoryAnimationTime      ();
         this.victoryAnimationForce      = this._randomVictoryAnimationForce   ();
         this.victoryAnimationAngle      = this._calcEndRotationAngle          ();
         this.victoryAnimationVelocity   = Vector_Create(0, 0);
-        this.victoryAnimationTime       = 0;
-        this.victoryAnimationMaxTime    = 1;
     } // ctor
 
     setVictory()
@@ -106,22 +108,25 @@ class Block
         if(this.isPlayingVictoryAnimation) {
             this.victoryAnimationDelayTimer.update(dt);
             if(this.victoryAnimationDelayTimer.isDone) {
-                this.victoryAnimationTime += dt;
-                if(this.victoryAnimationTime >= this.victoryAnimationMaxTime) {
-                    this.victoryAnimationTime = this.victoryAnimationMaxTime;
-                    // done..
+                if(!this.victoryAnimationTimer.started) {
+                    this.victoryAnimationTimer.start();
+                } else {
+                    if(this.victoryAnimationTimer.isDone) {
+                        this.isDone = true;
+                    }
+
+                    this.victoryAnimationTimer.update(dt);
+                    this.victoryAnimationForce.y *= 0.9; // decay...
+                    let acc = 30 + this.victoryAnimationForce.y;
+
+                    this.victoryAnimationVelocity.x = this.victoryAnimationForce.x;
+                    this.victoryAnimationVelocity.y += acc * dt;
+
+                    this.position.x += this.victoryAnimationVelocity.x * dt;
+                    this.position.y += this.victoryAnimationVelocity.y * dt;
+
+                    this.rotation += this.victoryAnimationAngle * dt;
                 }
-
-                this.victoryAnimationForce.y *= 0.9; // decay...
-                let acc = 30 + this.victoryAnimationForce.y;
-
-                this.victoryAnimationVelocity.x = this.victoryAnimationForce.x;
-                this.victoryAnimationVelocity.y += acc * dt;
-
-                this.position.x += this.victoryAnimationVelocity.x * dt;
-                this.position.y += this.victoryAnimationVelocity.y * dt;
-
-                this.rotation += this.victoryAnimationAngle * dt;
             }
         }
     } // update
@@ -151,7 +156,9 @@ class Block
             //
             // Ending Animation
             if(this.isPlayingVictoryAnimation) {
-                s = Math_Map(this.victoryAnimationTime, 0, this.victoryAnimationMaxTime, 1, 0.5);
+                let c = this.victoryAnimationTimer.current;
+                let d = this.victoryAnimationTimer.duration;
+                s = Math_Map(c, 0, d, 1, 0.5);
             }
 
             Canvas_Scale(s);
@@ -169,6 +176,17 @@ class Block
         let t = Math_Random(
             BLOCK_VICTORY_ANIM_START_DELAY_MIN,
             BLOCK_VICTORY_ANIM_START_DELAY_MAX
+        );
+
+        return new Timer(t);
+    } // _calcVictoryAnimationStartDelay
+
+    //--------------------------------------------------------------------------
+    _calcVictoryAnimationTime()
+    {
+        let t = Math_Random(
+            BLOCK_VICTORY_ANIM_TIME_MIN,
+            BLOCK_VICTORY_ANIM_TIME_MAX
         );
 
         return new Timer(t);
