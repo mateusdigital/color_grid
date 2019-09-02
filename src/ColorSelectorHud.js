@@ -57,8 +57,9 @@ class ColorSelectorHud
     //--------------------------------------------------------------------------
     _createColorBlocks()
     {
-        let gap = 10;
+        let gap  = 10;
         let size = Vector_Create(this.size.y - gap, this.size.y - gap);
+
         for(let i = 0; i < this.colorsCount; ++i) {
             let c = CreateContext(size.x, size.y);
             Canvas_SetRenderTarget(c);
@@ -67,7 +68,10 @@ class ColorSelectorHud
             Canvas_SetRenderTarget(null);
 
 
-            let pos_x = (size.x + gap) * (i + 1);
+            let px    = 1 / (this.colorsCount + 1);
+            let rx    = px * (i+1);
+            let pos_x = (rx * this.size.x) - (size.x / 2);
+
             let b = new UIButton(
                 c,
                 palette.getColor(i),
