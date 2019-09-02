@@ -57,18 +57,19 @@ class Block
         this.isOwned = false;
 
         // Victory Animation.
-        this.isPlayingVictoryAnimation    = false;
-        this.victoryAnimationDelayToStart = this._calcVictoryAnimationStartDelay();
-        this.victoryAnimationForce        = this._randomVictoryAnimationForce   ();
-        this.victoryAnimationAngle        = this._calcEndRotationAngle          ();
-        this.victoryAnimationVelocity     = Vector_Create(0, 0);
-        this.victoryAnimationTime         = 0;
-        this.victoryAnimationMaxTime      = 1;
+        this.isPlayingVictoryAnimation  = false;
+        this.victoryAnimationDelayTimer = this._calcVictoryAnimationStartDelay();
+        this.victoryAnimationForce      = this._randomVictoryAnimationForce   ();
+        this.victoryAnimationAngle      = this._calcEndRotationAngle          ();
+        this.victoryAnimationVelocity   = Vector_Create(0, 0);
+        this.victoryAnimationTime       = 0;
+        this.victoryAnimationMaxTime    = 1;
     } // ctor
 
     setVictory()
     {
         this.isPlayingVictoryAnimation = true;
+        this.victoryAnimationDelayTimer.start();
     }
 
     //--------------------------------------------------------------------------
@@ -103,8 +104,8 @@ class Block
         }
 
         if(this.isPlayingVictoryAnimation) {
-            this.victoryAnimationDelayToStart -= dt;
-            if(this.victoryAnimationDelayToStart <= 0) {
+            this.victoryAnimationDelayTimer.update(dt);
+            if(this.victoryAnimationDelayTimer.isDone) {
                 this.victoryAnimationTime += dt;
                 if(this.victoryAnimationTime >= this.victoryAnimationMaxTime) {
                     this.victoryAnimationTime = this.victoryAnimationMaxTime;
@@ -165,10 +166,12 @@ class Block
     //--------------------------------------------------------------------------
     _calcVictoryAnimationStartDelay()
     {
-        return Math_Random(
+        let t = Math_Random(
             BLOCK_VICTORY_ANIM_START_DELAY_MIN,
             BLOCK_VICTORY_ANIM_START_DELAY_MAX
         );
+
+        return new Timer(t);
     } // _calcVictoryAnimationStartDelay
 
     //--------------------------------------------------------------------------

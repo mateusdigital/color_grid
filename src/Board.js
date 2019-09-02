@@ -79,6 +79,7 @@ class Board
 
         this.canChangeColors = true;
 
+
         this._initializeBlocks();
     } // ctor
 
@@ -117,14 +118,7 @@ class Board
                 if(block.changingColor) {
                     this.canChangeColors = false;
                 }
-                // else {
-                //     if(this.state == GAME_STATE_VICTORY) {
-                //         block.maxTimeToChangeColor = 1;
-                //         block.changeColor(palette.getRandomIndex());
-                //     } else if(this.state == GAME_STATE_DEFEAT) {
-                //         block.changeColor(palette.getDefeatIndex());
-                //     }
-                // }
+
             }
         }
     } // update
@@ -214,6 +208,7 @@ class Board
 
         let block = this.blocks[0][0];
         block.isOwned = true;
+
         this.ownedBlocks.push(block); // left most is always owned.
         this.changeColor(block.targetColorIndex);
     } // _initializeBlocks()
