@@ -39,7 +39,6 @@ let loaded       = false;
 function ResetGame()
 {
     palette = new Palette(gameOptions.colorsCount);
-
     board = new Board(
         -gameOptions.gridWidth/2,  -gameOptions.gridHeight/2,
          gameOptions.gridWidth,     gameOptions.gridHeight,
@@ -52,6 +51,8 @@ function ResetGame()
          Canvas_Width,      50,
          gameOptions.colorsCount
     );
+
+    statusHud.updateMovesCount();
 }
 
 //------------------------------------------------------------------------------
@@ -81,13 +82,12 @@ async function Setup()
     gameOptions = new GameOptions();
     statusHud   = new StatusHud(
         -Canvas_Width / 2, Canvas_Edge_Top,
-         Canvas_Width,      50,
+         Canvas_Width,     50,
     );
 
     //
     // Create the objects that depends on options...
     ResetGame();
-    statusHud.updateMovesCount();
     optionsPanel = new OptionsPanel();
 }
 
