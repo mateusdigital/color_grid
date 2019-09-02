@@ -56,8 +56,8 @@ class StatusHud
         );
 
         // Score
-        let score_position = Vector_Create(this.size.x / 2, this.size.y / 2);
-        this.scoreText = new UIText("Score: 0", score_position, 20, "arial");
+        this.lastScore = -1;
+        this.scoreText = null;
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -65,6 +65,11 @@ class StatusHud
     {
         this.cogButton   .update(dt);
         this.reloadButton.update(dt);
+
+        if(board.movesCount != this.lastScore) {
+            this.lastScore = board.movesCount;
+            this.updateMovesCount();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -83,6 +88,18 @@ class StatusHud
             this.scoreText.draw();
         Canvas_Pop();
     } // draw
+
+    updateMovesCount()
+    {
+        let count = board.movesCount-1;
+        let max   = board.maxMovesCount;
+        let str   = String_Cat(count, " / ", max);
+
+        // @notice(stdmatt): Lame but quick... Best way would be just to
+        // update the string contents...
+        let score_position = Vector_Create(this.size.x / 2, this.size.y / 2);
+        this.scoreText = new UIText(str, score_position, 20, "arial");
+    }
 
     //--------------------------------------------------------------------------
     onCogClicked(b)

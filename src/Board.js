@@ -75,7 +75,7 @@ class Board
 
         this.state         = GAME_STATE_CONTINUE;
         this.movesCount    = 0;
-        this.maxMovesCount = (this.blocksCount.x * this.blocksCount.y);
+        this.maxMovesCount = this._calculateMaxMoves();
 
         this.canChangeColors = true;
         this.isDone          = false;
@@ -242,4 +242,10 @@ class Board
             }
         }
     } // _setAllBlocksToBeOwnedAndDefeated
+
+    _calculateMaxMoves()
+    {
+        let s = (this.blocksCount.x * this.colorsCount);
+        return Math_Int((s / gameOptions.DifficultyModifier) + 0.5);
+    }
 }; // class Board

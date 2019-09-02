@@ -82,8 +82,8 @@ async function Setup()
     //
     // Create the objects that depends on options...
     ResetGame();
+    statusHud.updateMovesCount();
 }
-
 //------------------------------------------------------------------------------
 function Draw(dt)
 {

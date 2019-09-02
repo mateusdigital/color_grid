@@ -1,7 +1,7 @@
 [DONE] - Start new game after the victory animation finishes to play.
 [DONE] - Start new game after the defeat  animation finishes to play.
 [DONE] - Align the color selectors button on the bottom hud.
-- Make the top hud shows the current and max moves on the game.
+[DONE] - Make the top hud shows the current and max moves on the game.
 - Implement the options screen.
     - Implement the UI radio button.
     - Implement the color theme selectors.

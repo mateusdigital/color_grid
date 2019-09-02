@@ -23,12 +23,15 @@ class GameOptions
     constructor()
     {
         // Colors
-        this.colorsCount = 5;
+        this.colorsCount = 4;
 
         // Grid
         this.gridWidth  = Canvas_Width - 20;
         this.gridHeight = this.gridWidth;
-        this.gridRows   = 8;
-        this.gridCols   = 8;
+        this.gridRows   = 10;
+        this.gridCols   = 10;
+
+        // Difficulty
+        this.DifficultyModifier = 3.2;
     } // ctor
 }; // class GameOptions
