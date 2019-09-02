@@ -77,9 +77,9 @@ class UIButton
     //--------------------------------------------------------------------------
     _updateMouseStatus()
     {
-        let t = CurrContext.getTransform();
-        let tx = t.e;
-        let ty = t.f;
+        let t = GetContextTransform();
+        let tx = t[4];
+        let ty = t[5];
 
         let contains = Math_RectContainsPoint(
             tx, ty,

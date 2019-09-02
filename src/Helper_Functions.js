@@ -115,3 +115,20 @@ function DrawWithTint(img, dx, dy, dw, dh, tint)
         dx, dy, dw, dh
     );
 }
+
+//------------------------------------------------------------------------------
+function GetContextTransform()
+{
+    if(typeof(CurrContext.getTransform) == "function") {
+        let t = CurrContext.getTransform()
+        return [t.a, t.b, t.c, t.d, t.e, t.f];
+    }
+
+    if(CurrContext.currentTransform) {
+        return CurrContext.currentTransform;
+    }
+
+    if(CurrContext.mozCurrentTransform) {
+        return CurrContext.mozCurrentTransform;
+    }
+}

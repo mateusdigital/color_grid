@@ -75,9 +75,10 @@ class Board
 
         this.state         = GAME_STATE_CONTINUE;
         this.movesCount    = 0;
-        this.maxMovesCount = this.blocksCount.x * this.blocksCount.y;
+        this.maxMovesCount = (this.blocksCount.x * this.blocksCount.y);
 
         this.canChangeColors = true;
+        this.isDone          = false;
 
         this._initializeBlocks();
     } // ctor
@@ -101,6 +102,7 @@ class Board
             this._setAllBlocksToBeOwnedAndDefeated();
         } else if(this.ownedBlocks.length == this.blocksCount.x * this.blocksCount.y) {
             this.state = GAME_STATE_VICTORY;
+            this._setAllBlocksToBeOwnedVictory();
         }
     } // changeColor
 
@@ -109,12 +111,16 @@ class Board
     update(dt)
     {
         this.canChangeColors = true;
+        this.isDone          = true;
         for(let y = 0; y < this.blocksCount.y; ++y) {
             for(let x = 0; x < this.blocksCount.x; ++x) {
                 let block = this.blocks[y][x];
                 block.update(dt);
                 if(block.changingColor) {
                     this.canChangeColors = false;
+                }
+                if(!block.isDone) {
+                    this.isDone = false;
                 }
             }
         }
@@ -129,7 +135,7 @@ class Board
                 for(let x = 0; x < this.blocksCount.x; ++x) {
                     let block = this.blocks[y][x];
                     let s = 1;
-                    if(block.isOwned) {
+                    if(block.isOwned && this.state == GAME_STATE_CONTINUE) {
                         s = Math_Sin(Time_Total * 4) + 0.8;
                         s = Math_Map(s, -1, 1, 0.8, 1);
                     }
@@ -205,9 +211,23 @@ class Board
 
         let block = this.blocks[0][0];
         block.isOwned = true;
+
         this.ownedBlocks.push(block); // left most is always owned.
         this.changeColor(block.targetColorIndex);
     } // _initializeBlocks()
+
+       //--------------------------------------------------------------------------
+       _setAllBlocksToBeOwnedVictory()
+       {
+           this.ownedBlocks = [];
+           for(let y = 0; y < this.blocksCount.y; ++y) {
+               for(let x = 0; x < this.blocksCount.x; ++x) {
+                   let block = this.blocks[y][x];
+                   block.setVictory();
+                   this.ownedBlocks.push(block);
+               }
+           }
+       } // _setAllBlocksToBeOwnedAndDefeated
 
     //--------------------------------------------------------------------------
     _setAllBlocksToBeOwnedAndDefeated()
@@ -216,8 +236,8 @@ class Board
         for(let y = 0; y < this.blocksCount.y; ++y) {
             for(let x = 0; x < this.blocksCount.x; ++x) {
                 let block = this.blocks[y][x];
-                block.changeColor(palette.getDefeatIndex());
-
+                // block.changeColor(palette.getDefeatIndex());
+                block.setDefeat();
                 this.ownedBlocks.push(block);
             }
         }
