@@ -57,7 +57,7 @@ class Block
         this.colorIndex       = palette.getDefeatIndex();
         this.targetColorIndex = colorIndex;
 
-        this.changeColorTimer = new Timer(Math_Random(0, 1));
+        this.changeColorTimer = new Timer(Random_Number(0, 1));
         this.changingColor        = false;
         this.isEntryColorChange   = true;
 
@@ -268,11 +268,11 @@ class Block
     //--------------------------------------------------------------------------
     _randomVictoryAnimationForce()
     {
-        let x = Math_RandomInt(
+        let x = Random_Int(
             BLOCK_VICTORY_ANIM_FORCE_MIN_X,
             BLOCK_VICTORY_ANIM_FORCE_MAX_X
         );
-        let y = Math_RandomInt(
+        let y = Random_Int(
             BLOCK_VICTORY_ANIM_FORCE_MIN_Y,
             BLOCK_VICTORY_ANIM_FORCE_MAX_Y
         );
@@ -283,7 +283,7 @@ class Block
     //--------------------------------------------------------------------------
     _buildRandomTimer(m, M)
     {
-        let t = Math_Random(m, M);
+        let t = Random_Number(m, M);
         return new Timer(t);
     } // _buildRandomTimer
 }; // class Block

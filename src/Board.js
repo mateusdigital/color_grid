@@ -204,7 +204,7 @@ class Board
 
         for(let i = 0; i < this.blocksCount.y; ++i) {
             for(let j = 0; j < this.blocksCount.x; ++j) {
-                let color_index = Math_RandomInt(0, this.colorsCount);
+                let color_index = Random_Int(0, this.colorsCount);
                 let b = new Block(j, i, block_width, block_height, color_index);
 
                 this.blocks[i][j] = b;

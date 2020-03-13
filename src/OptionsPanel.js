@@ -247,8 +247,6 @@ class OptionsPanel
         this.desiredRows   = gameOptions.gridCols;
         this.desiredCols   = gameOptions.gridCols;
         this.desiredColors = gameOptions.colorsCount;
-
-        Log(this.desiredRows, this.desiredCols, this.desiredColors);
     }
 
     _updateUI()

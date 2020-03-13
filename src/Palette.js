@@ -51,7 +51,7 @@ class Palette
     //--------------------------------------------------------------------------
     getRandomIndex()
     {
-        return Math_RandomInt(0, this.colorsCount);
+        return Random_Int(0, this.colorsCount);
     }
 
     //--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ class Palette
 
         ];
 
-        let pal_index = Math_RandomInt(0, palettes.length);
+        let pal_index = Random_Int(0, palettes.length);
         let colors    = palettes[pal_index];
         for(let i = 0; i < colors.length; ++i) {
             let row   = colors[i];

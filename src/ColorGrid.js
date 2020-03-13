@@ -61,12 +61,57 @@ function ShowOptionsPanel()
     optionsPanel.show();
 }
 
+function InitializeCanvas()
+{
+    //
+    // Configure the Canvas.
+    const parent        = document.getElementById("canvas_div");
+    const parent_width  = parent.clientWidth;
+    const parent_height = parent.clientHeight;
+
+    const max_side = Math_Max(parent_width, parent_height);
+    const min_side = Math_Min(parent_width, parent_height);
+
+    const ratio = min_side / max_side;
+
+    // Landscape
+    if(parent_width > parent_height) {
+        Canvas_CreateCanvas(800, 800 * ratio, parent);
+    }
+    // Portrait
+    else {
+        Canvas_CreateCanvas(800 * ratio, 800, parent);
+    }
+
+    Canvas.style.width  = "100%";
+    Canvas.style.height = "100%";
+
+
+    //
+    // Add information.
+    // const info = document.createElement("p");
+    // info.innerHTML = String_Cat(
+    //     PROJECT_TITLE,
+    //     PROJECT_DATE,
+    //     PROJECT_VERSION,
+    //     PROJECT_INSTRUCTIONS,
+    //     PROJECT_LINK,
+    // )
+    // parent.appendChild(info);
+
+}
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 async function Setup()
 {
+
+    InitializeCanvas();
+    Random_Seed(null);
+    Input_InstallBasicMouseHandler(Canvas);
+
+
     //
     // Load the textures - Game can't run without it...
     let loaded_textures = await LoadTextures(
@@ -89,6 +134,8 @@ async function Setup()
     // Create the objects that depends on options...
     ResetGame();
     optionsPanel = new OptionsPanel();
+
+    Canvas_Start();
 }
 
 //------------------------------------------------------------------------------
@@ -119,14 +166,15 @@ function Draw(dt)
 }
 
 
-Canvas_Setup({
-    main_title        : "Simple Snake",
-    main_date         : "Aug 10, 2019",
-    main_version      : "v0.0.1",
-    main_instructions : "<br><b>arrow keys</b> to move the snake<br><b>R</b> to start a new game.",
-    main_link: "<a href=\"http://stdmatt.com/demos/startfield.html\">More info</a>"
-});
+// Canvas_Setup({
+//     main_title        : "Simple Snake",
+//     main_date         : "Aug 10, 2019",
+//     main_version      : "v0.0.1",
+//     main_instructions : "<br><b>arrow keys</b> to move the snake<br><b>R</b> to start a new game.",
+//     main_link: "<a href=\"http://stdmatt.com/demos/startfield.html\">More info</a>"
+// });
 
 //----------------------------------------------------------------------------//
 // Entry Point                                                                //
 //----------------------------------------------------------------------------//
+Setup();
