@@ -16,7 +16,6 @@
 //   Just a simple Color Grid game...                                         //
 //---------------------------------------------------------------------------~//
 
-
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
@@ -31,7 +30,6 @@ let textureCog   = null;
 let textureReset = null;
 let loaded       = false;
 
-
 //----------------------------------------------------------------------------//
 // Helper Functions                                                           //
 //----------------------------------------------------------------------------//
@@ -39,19 +37,53 @@ let loaded       = false;
 function ResetGame()
 {
     palette = new Palette(gameOptions.colorsCount);
+
+    const canvas_min_size   = Math_Min(Canvas_Width, Canvas_Height);
+    const status_hud_height = 50;
+    const colors_hud_height = status_hud_height + 20;
+    const huds_total_height = (status_hud_height + colors_hud_height);
+    const board_gap_to_hud  = 30;
+    let   board_size        = 0;
+
+    // Calculate the max board size, so it will fit on the screen no
+    // matter the resolution of the game.
+    // Landscape
+    if(Canvas_Width > Canvas_Height) {
+        board_size = canvas_min_size - huds_total_height;
+    }
+    // Portrait
+    else {
+        board_size = canvas_min_size;
+    }
+    board_size -= board_gap_to_hud;
+    const board_half_size = (board_size * 0.5);
+
+    statusHud = new StatusHud(
+        -Canvas_Half_Width,
+        Canvas_Edge_Top,
+        Canvas_Width,
+        status_hud_height,
+    );
+
     board = new Board(
-        -gameOptions.gridWidth/2,  -gameOptions.gridHeight/2,
-         gameOptions.gridWidth,     gameOptions.gridHeight,
-         gameOptions.gridRows,      gameOptions.gridCols,
-         gameOptions.colorsCount
+        -board_half_size,
+        -board_half_size,
+        board_size,
+        board_size,
+        gameOptions.gridRows,
+        gameOptions.gridCols,
+        gameOptions.colorsCount
     );
 
     colorSelector = new ColorSelectorHud(
-        -Canvas_Width / 2,  Canvas_Edge_Bottom - 60,
-         Canvas_Width,      50,
-         gameOptions.colorsCount
+        -Canvas_Half_Width,
+        Canvas_Edge_Bottom - colors_hud_height,
+        Canvas_Width,
+        colors_hud_height,
+        gameOptions.colorsCount
     );
 
+    optionsPanel = new OptionsPanel();
     statusHud.updateMovesCount();
 }
 
@@ -61,6 +93,7 @@ function ShowOptionsPanel()
     optionsPanel.show();
 }
 
+//------------------------------------------------------------------------------
 function InitializeCanvas()
 {
     //
@@ -86,7 +119,6 @@ function InitializeCanvas()
     Canvas.style.width  = "100%";
     Canvas.style.height = "100%";
 
-
     //
     // Add information.
     // const info = document.createElement("p");
@@ -98,8 +130,8 @@ function InitializeCanvas()
     //     PROJECT_LINK,
     // )
     // parent.appendChild(info);
-
 }
+
 //----------------------------------------------------------------------------//
 // Setup / Draw                                                               //
 //----------------------------------------------------------------------------//
@@ -110,7 +142,6 @@ async function Setup()
     Random_Seed(null);
     Input_InstallBasicMouseHandler(Canvas);
 
-
     //
     // Load the textures - Game can't run without it...
     let loaded_textures = await LoadTextures(
@@ -119,21 +150,15 @@ async function Setup()
     );
     textureCog   = loaded_textures["./res/icon_cog.png"];
     textureReset = loaded_textures["./res/icon_reset.png"];
-    loaded = true;
+    loaded       = true;
 
     //
-    // Create the objects that are need to be created only once.
+    // Create the Game.
     gameOptions = new GameOptions();
-    statusHud   = new StatusHud(
-        -Canvas_Width / 2, Canvas_Edge_Top,
-         Canvas_Width,     50,
-    );
+    ResetGame();
 
     //
-    // Create the objects that depends on options...
-    ResetGame();
-    optionsPanel = new OptionsPanel();
-
+    // Start the rendering loop.
     Canvas_Start();
 }
 
@@ -151,13 +176,12 @@ function Draw(dt)
         colorSelector.update(dt);
         statusHud    .update(dt);
         board        .update(dt);
-
     }
 
     colorSelector.draw();
     statusHud    .draw();
     board        .draw();
-    optionsPanel.draw();
+    optionsPanel .draw();
 
     if(board.isDone) {
         ResetGame();
