@@ -44,10 +44,8 @@ class GameOptions
         this.colorsCount = GAME_OPTIONS_DEFAULT_COLORS;
 
         // Grid
-        this.gridWidth  = Canvas_Width - 20;
-        this.gridHeight = this.gridWidth;
-        this.gridRows   = GAME_OPTIONS_DEFAULT_ROWS;
-        this.gridCols   = GAME_OPTIONS_DEFAULT_COLS;
+        this.gridRows = GAME_OPTIONS_DEFAULT_ROWS;
+        this.gridCols = GAME_OPTIONS_DEFAULT_COLS;
 
         // Difficulty
         this.DifficultyModifier = 3.2;
