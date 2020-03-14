@@ -40,7 +40,8 @@ class Palette
         this.colors.push(chroma("white"));
 
 
-        this.backgroundColor = chroma("#0b1420");
+        this.backgroundColor = chroma("#002A37");
+        // this.backgroundColor = chroma("#FEF7E1");
     } // ctor
 
     getBackgroundColor()
@@ -70,12 +71,15 @@ class Palette
     //--------------------------------------------------------------------------
     _getPaletteColors()
     {
-        let palettes = [
-
-            // [ "#FF9671", "#E57B89", "#B56D97", "#7D6592", "#4B597A", "#2F4858",]
-            ["#e179bc", "#5563a1", "#b15232", "#f68642", "#ffbd4f", "#f7553a"],
-
-        ];
+        let palettes = [[
+           "#D93f99",
+           "#EB0003",
+           "#E40080",
+           "#7068CA",
+           "#0087D9",
+           "#00A59A",
+           "#7E9F00",
+        ]];
 
         let pal_index = Random_Int(0, palettes.length);
         let colors    = palettes[pal_index];
