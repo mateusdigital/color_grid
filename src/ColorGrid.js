@@ -106,7 +106,6 @@ function InitializeCanvas()
 //------------------------------------------------------------------------------
 async function Setup()
 {
-
     InitializeCanvas();
     Random_Seed(null);
     Input_InstallBasicMouseHandler(Canvas);
@@ -163,6 +162,12 @@ function Draw(dt)
     if(board.isDone) {
         ResetGame();
     }
+
+    // @XXX(stdmatt): This is a extremely ugly hack that we need to do
+    // because we don't ahve proper input handling in the mcow_js_core yet.
+    // So we need to manually reset the state of the Mouse_IsClicked otherwise
+    // it will remain clicked forever.
+    Mouse_IsClicked = false;
 }
 
 
