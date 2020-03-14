@@ -89,6 +89,7 @@ class StatusHud
         Canvas_Pop();
     } // draw
 
+    //--------------------------------------------------------------------------
     updateMovesCount()
     {
         let count = board.movesCount-1;
