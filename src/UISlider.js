@@ -7,10 +7,10 @@
 //                                                                            //
 //  File      : UISlider.js                                                   //
 //  Project   : color_grid                                                    //
-//  Date      : 02, Sep 2019                                                  //
+//  Date      : Sep 02, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//  Copyright : stdmatt 2019, 2020                                            //
 //                                                                            //
 //  Description :                                                             //
 //   Implements a user interface slider that can be                           //

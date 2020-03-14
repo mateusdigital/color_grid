@@ -10,7 +10,7 @@
 //  Date      : Aug 28, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//  Copyright : stdmatt 2019, 2020                                            //
 //                                                                            //
 //  Description :                                                             //
 //   Implements the bottom hud to change the colors in game.                  //

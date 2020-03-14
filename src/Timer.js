@@ -6,11 +6,11 @@
 //                   |___/\__\__,_|_| |_| |_|\__,_|\__|\__|                   //
 //                                                                            //
 //  File      : Timer.js                                                      //
-//  Project   : vector_typers                                                 //
-//  Date      : Sep 01, 2019                                                  //
+//  Project   : color_grid                                                    //
+//  Date      : Sep 02, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//  Copyright : stdmatt 2019, 2020                                            //
 //                                                                            //
 //  Description :                                                             //
 //                                                                            //

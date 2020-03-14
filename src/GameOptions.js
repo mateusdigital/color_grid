@@ -7,10 +7,10 @@
 //                                                                            //
 //  File      : GameOptions.js                                                //
 //  Project   : color_grid                                                    //
-//  Date      : Aug 31, 2019                                                  //
+//  Date      : Aug 30, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//  Copyright : stdmatt 2019, 2020                                            //
 //                                                                            //
 //  Description :                                                             //
 //   Current game options.                                                    //

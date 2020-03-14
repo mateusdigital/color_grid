@@ -5,12 +5,12 @@
 //                   \__ \ || (_| | | | | | | (_| | |_| |_                    //
 //                   |___/\__\__,_|_| |_| |_|\__,_|\__|\__|                   //
 //                                                                            //
-//  File      : ColorSelectorHud.js                                           //
+//  File      : Palette.js                                                    //
 //  Project   : color_grid                                                    //
 //  Date      : Aug 27, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//  Copyright : stdmatt 2019, 2020                                            //
 //                                                                            //
 //  Description :                                                             //
 //   Manages the current color scheme of the game.                            //
