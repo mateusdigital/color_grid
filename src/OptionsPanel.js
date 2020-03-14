@@ -257,6 +257,9 @@ class OptionsPanel
 
         t = new UIText("Thanks for playing!", Vector_Create(0, 120), 20, "arial");
         this.texts.push(t);
+
+        t = new UIText(String_Cat("Version: ", GetVersion()), Vector_Create(0, 180), 10, "arial");
+        this.texts.push(t);
     } // _buildCreditsUI
 
     _updateState()
