@@ -63,6 +63,8 @@ echo "Creating the distribution artifact!!!";
 ##   Not very efficient but I mean...
 ##   is a such simple file and some many things to do yet...
 VERSION_FILENAME="${ROOT_DIR}/src/Version.js";
+test ! -f "${VERSION_FILENAME}" && \
+    pw_log_fatal "Version files doesn't exits (${VERSION_FILENAME})";
 
 MAJOR=$(cat "$VERSION_FILENAME" | grep "const .*_MAJOR" | tac -s" " | head -1);
 MINOR=$(cat "$VERSION_FILENAME" | grep "const .*_MINOR" | tac -s" " | head -1);
@@ -72,6 +74,7 @@ BABY=$( cat "$VERSION_FILENAME" | grep "const .*_BABY"  | tac -s" " | head -1);
 ## them by - and remove the trailing one :D
 FINAL_VERSION="$(pw_string_replace "${MAJOR}${MINOR}${BABY}" ";" "-")";
 FINAL_VERSION="$(pw_substr "$FINAL_VERSION" 0 -1)";
+echo "FINAL_VERSION: ${FINAL_VERSION}";
 
 echo "Cleaning dist directory";
 rm    -rf "$DIST_DIR";
